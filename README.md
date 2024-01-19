@@ -1,6 +1,6 @@
-## QSIDE_Spring24
+# QSIDE_Spring24
 
-# Team Members
+## Team Members
 1. Shiloh Maliskey
 2. Claire Benson
 3. Kofi Debrah
