@@ -8,3 +8,5 @@
 5. Jazel VanLandschoot
 
 Project Plan Video Link: https://www.youtube.com/watch?v=Cs6HQqn5nto
+
+Install Instructions: https://github.com/kofiDebrah447/QSIDE_Spring24/blob/main/INSTALL.md
