@@ -1,3 +1,4 @@
+Install Instructions
 1. Clone or download the project repository from GitHub into a folder on your computer using
   git clone <https://github.com/kofiDebrah447/QSIDE_Spring24.git>
 2. Download and install R and RStudio for your OS. Follow default install instructions. (https://posit.co/download/rstudio-desktop/)
