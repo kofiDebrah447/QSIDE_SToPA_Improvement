@@ -13,6 +13,7 @@ server <- (function(input, output, session){
   updateUI <- function(changed){
     if(changed){
       shinyjs::hide("downloadresultsZip")
+      hideTab(inputId = "main", target = "Report")
       hideTab(inputId = "main", target = "Q1")
       hideTab(inputId = "main", target = "Q2")
       hideTab(inputId = "main", target = "Q3")
@@ -23,10 +24,14 @@ server <- (function(input, output, session){
       hideTab(inputId = "main", target = "Q8")
       hideTab(inputId = "main", target = "Q9")
       hideTab(inputId = "main", target = "Q10")
+      hideTab(inputId = "main", target = "Q11") ###### ADDED
+      hideTab(inputId = "main", target = "Q12") ###### ADDED
+      hideTab(inputId = "main", target = "Q13") ###### ADDED
       
       shinyjs::show("completeAnalysis")
     }else{
       shinyjs::show("downloadresultsZip")
+      showTab(inputId = "main", target = "Report")
       showTab(inputId = "main", target = "Q1")
       showTab(inputId = "main", target = "Q2")
       showTab(inputId = "main", target = "Q3")
@@ -37,6 +42,9 @@ server <- (function(input, output, session){
       showTab(inputId = "main", target = "Q8")
       showTab(inputId = "main", target = "Q9")
       showTab(inputId = "main", target = "Q10")
+      showTab(inputId = "main", target = "Q11") ###### ADDED
+      showTab(inputId = "main", target = "Q12") ###### ADDED
+      showTab(inputId = "main", target = "Q13") ###### ADDED
       
       shinyjs::hide("completeAnalysis")
     }
@@ -109,7 +117,7 @@ server <- (function(input, output, session){
       updateSelectizeInput(session, "select_arrestTypes", choices = unique(globalVars$dataset[["Arrest"]]), selected = "TRUE")
       
       # fill bond amount column select
-      updateSelectizeInput(session, "select_bond", choices = c("","Not in the Data",colnames(globalVars$dataset)), selected = "BondAmount")
+      updateSelectizeInput(session, "select_bond", choices = c(colnames(globalVars$dataset)), selected = "BondAmount")
       
       # fill patrol column select
       updateSelectizeInput(session, "select_patrol", choices = c(colnames(globalVars$dataset)), selected = "Patrol")
@@ -141,7 +149,7 @@ server <- (function(input, output, session){
       updateSelectizeInput(session, "select_arrest", choices = c(colnames(globalVars$dataset)), selected = "")
       
       # fill bond amount column select
-      updateSelectizeInput(session, "select_bond", choices = c("","Not in the Data",colnames(globalVars$dataset)), selected = "")
+      updateSelectizeInput(session, "select_bond", choices = c(colnames(globalVars$dataset)), selected = "")
       
       # fill patrol column select
       updateSelectizeInput(session, "select_patrol", choices = c(colnames(globalVars$dataset)), selected = "")
@@ -797,7 +805,7 @@ server <- (function(input, output, session){
     actualarresttypes <- input$select_arrestTypes
     
     # Bond amount column
-    bondamountcolumn <- ifelse(input$select_bond=="Not in the Data", NA, input$select_bond)
+    bondamountcolumn <- input$select_bond
     
     # Patrolling geo unit
     patrolcolumn <- input$select_patrol
@@ -873,8 +881,6 @@ server <- (function(input, output, session){
       rename(BondAmount = !!bondamountcolumn) %>%
       mutate(BondAmount = str_replace_all(BondAmount, "(\\$|\\,)", "")) %>%
       mutate(BondAmount = as.numeric(BondAmount))
- 
-    
     
     # Organize patrol geo units
     policingdata <- policingdata %>%
@@ -1194,20 +1200,22 @@ server <- (function(input, output, session){
           rbind(acsracegender) %>%
           complete(Race, Gender, datatype, fill = list(proportion = 0)) %>%
           mutate(datatype = factor(datatype)) %>%
-          mutate(datatype = relevel(datatype, ref = "Policing Records"))
+          mutate(datatype = relevel(datatype, ref = "Policing Records")) %>%
+          filter(Gender != "Missing gender data") %>% ###### ADDED
+          filter(Race != "Missing race data") ###### ADDED
         
         p <- qdata %>%
-          ggplot(aes(x = Gender, y = Race, size = proportion, fill = datatype, group = datatype, alpha = datatype)) +
-          geom_point(shape = 21, stroke = 0.6, color = "black") +
-          scale_size(range = c(1,20)) +
-          scale_fill_manual(values = c("red","gray30")) +
-          scale_alpha_manual(values = c(0.7, 0.9)) +
-          ylab("Race") +
-          scale_x_discrete(name = "Gender", position = "top") +
-          scale_y_discrete(limits = rev) +
-          guides(fill = guide_legend(title = NULL, override.aes = list(size = 4), label.position = "bottom"), size = "none", group = "none", alpha = "none") +
-          theme_bw() +
-          theme(legend.text=element_text(size=8), legend.position = "bottom", legend.direction = "horizontal", legend.box = "horizontal", legend.key = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+          ggplot(aes(x = Race, y = proportion, fill = Gender, alpha = datatype)) +
+          geom_bar(stat = "identity", position = "dodge") + ###### ADDED
+          ylab("Proportion") +
+          xlab("Race") +
+          scale_fill_manual(values = c("purple", "blue"), 
+                            guide = guide_legend(title = "Gender"),
+                            labels = c("Man", "Women")) +
+          scale_alpha_manual(values = c(0.3, 0.7),
+                             guide = guide_legend(title = "Data Type"),
+                             labels = c("Policing Records", "Local Population")) +
+          theme_bw()
         
         globalVars$p1 <- p
         
@@ -1221,16 +1229,16 @@ server <- (function(input, output, session){
         deleteData(wb, sheet = question, cols = 1, rows = 2)
         writeData(wb, sheet = question, startRow = 1, startCol = 2, "Man")
         writeData(wb, sheet = question, startRow = 1, startCol = 4, "Woman")
-        writeData(wb, sheet = question, startRow = 1, startCol = 6, "Missing gender data")
+        #writeData(wb, sheet = question, startRow = 1, startCol = 6, "Missing gender data") ###### DELETE?
         mergeCells(wb, sheet = question, rows = 1, cols = 2:3)
         mergeCells(wb, sheet = question, rows = 1, cols = 4:5)
-        mergeCells(wb, sheet = question, rows = 1, cols = 6:7)
+        #mergeCells(wb, sheet = question, rows = 1, cols = 6:7) ###### DELETE?
         writeData(wb, sheet = question, startRow = 2, startCol = 2, "Population")
         writeData(wb, sheet = question, startRow = 2, startCol = 4, "Population")
-        writeData(wb, sheet = question, startRow = 2, startCol = 6, "Population")
+        #writeData(wb, sheet = question, startRow = 2, startCol = 6, "Population") ###### DELETE?
         writeData(wb, sheet = question, startRow = 2, startCol = 3, "Policing")
         writeData(wb, sheet = question, startRow = 2, startCol = 5, "Policing")
-        writeData(wb, sheet = question, startRow = 2, startCol = 7, "Policing")
+        #writeData(wb, sheet = question, startRow = 2, startCol = 7, "Policing") ###### DELETE?
         addStyle(wb, sheet = question, style = centered, rows = 1:2, cols = 2:7, gridExpand = TRUE)
         addStyle(wb, sheet = question, style = centeredrounded3, rows = 3:11, cols = 2:7, gridExpand = TRUE)
         if (chisq$p.value < 0.05) {
@@ -1280,20 +1288,22 @@ server <- (function(input, output, session){
           rbind(acsracegender) %>%
           complete(Race, Gender, datatype, fill = list(proportion = 0)) %>%
           mutate(datatype = factor(datatype)) %>%
-          mutate(datatype = relevel(datatype, ref = "Policing Records"))
+          mutate(datatype = relevel(datatype, ref = "Policing Records")) %>%
+          filter(Gender != "Missing gender data") %>%  ###### ADDED
+          filter(Race != "Missing race data") ###### ADDED
         
         p <- qdata %>%
-          ggplot(aes(x = Gender, y = Race, size = proportion, fill = datatype, group = datatype, alpha = datatype)) +
-          geom_point(shape = 21, stroke = 0.6, color = "black") +
-          scale_size(range = c(1,20)) +
-          scale_fill_manual(values = c("red","gray30")) +
-          scale_alpha_manual(values = c(0.7, 0.9)) +
-          ylab("Race") +
-          scale_x_discrete(name = "Gender", position = "top") +
-          scale_y_discrete(limits = rev) +
-          guides(fill = guide_legend(title = NULL, override.aes = list(size = 4), label.position = "bottom"), size = "none", group = "none", alpha = "none") +
-          theme_bw() +
-          theme(legend.text=element_text(size=8), legend.position = "bottom", legend.direction = "horizontal", legend.box = "horizontal", legend.key = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+          ggplot(aes(x = Race, y = proportion, fill = Gender, alpha = datatype)) +
+          geom_bar(stat = "identity", position = "dodge") + ###### ADDED
+          ylab("Proportion") +
+          xlab("Race") +
+          scale_fill_manual(values = c("purple", "blue"), 
+                            guide = guide_legend(title = "Gender"),
+                            labels = c("Man", "Women")) +
+          scale_alpha_manual(values = c(0.3, 0.7),
+                             guide = guide_legend(title = "Data Type"),
+                             labels = c("Policing Records", "Local Population")) +
+          theme_bw()
         
         globalVars$p2 <- p
         
@@ -1363,20 +1373,23 @@ server <- (function(input, output, session){
           rbind(acsracegender) %>%
           complete(Race, Gender, datatype, fill = list(proportion = 0)) %>%
           mutate(datatype = factor(datatype)) %>%
-          mutate(datatype = relevel(datatype, ref = "Policing Records"))
+          mutate(datatype = relevel(datatype, ref = "Policing Records")) %>%
+          filter(Gender != "Missing gender data") %>%  ###### ADDED
+          filter(Race != "Missing race data") ###### ADDED
         
         p <- qdata %>%
-          ggplot(aes(x = Gender, y = Race, size = proportion, fill = datatype, group = datatype, alpha = datatype)) +
-          geom_point(shape = 21, stroke = 0.6, color = "black") +
-          scale_size(range = c(1,20)) +
-          scale_fill_manual(values = c("red","gray30")) +
-          scale_alpha_manual(values = c(0.7, 0.9)) +
-          ylab("Race") +
-          scale_x_discrete(name = "Gender", position = "top") +
-          scale_y_discrete(limits = rev) +
-          guides(fill = guide_legend(title = NULL, override.aes = list(size = 4), label.position = "bottom"), size = "none", group = "none", alpha = "none") +
-          theme_bw() +
-          theme(legend.text=element_text(size=8), legend.position = "bottom", legend.direction = "horizontal", legend.box = "horizontal", legend.key = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+          ggplot(aes(x = Race, y = proportion, fill = Gender, alpha = datatype)) +
+          geom_bar(stat = "identity", position = "dodge") + ###### ADDED
+          ylab("Proportion") +
+          xlab("Race") +
+          scale_fill_manual(values = c("purple", "blue"), 
+                            guide = guide_legend(title = "Gender"),
+                            labels = c("Man", "Women")) +
+          scale_alpha_manual(values = c(0.3, 0.7),
+                             guide = guide_legend(title = "Data Type"),
+                             labels = c("Policing Records", "Local Population")) +
+          theme_bw()
+        
         
         globalVars$p3 <- p
         
@@ -1389,21 +1402,22 @@ server <- (function(input, output, session){
         deleteData(wb, sheet = question, cols = 1, rows = 2)
         writeData(wb, sheet = question, startRow = 1, startCol = 2, "Man")
         writeData(wb, sheet = question, startRow = 1, startCol = 4, "Woman")
-        writeData(wb, sheet = question, startRow = 1, startCol = 6, "Missing gender data")
+        #writeData(wb, sheet = question, startRow = 1, startCol = 6, "Missing gender data") 
         mergeCells(wb, sheet = question, rows = 1, cols = 2:3)
         mergeCells(wb, sheet = question, rows = 1, cols = 4:5)
-        mergeCells(wb, sheet = question, rows = 1, cols = 6:7)
+        #mergeCells(wb, sheet = question, rows = 1, cols = 6:7)
         writeData(wb, sheet = question, startRow = 2, startCol = 2, "Population")
         writeData(wb, sheet = question, startRow = 2, startCol = 4, "Population")
-        writeData(wb, sheet = question, startRow = 2, startCol = 6, "Population")
+       # writeData(wb, sheet = question, startRow = 2, startCol = 6, "Population")
         writeData(wb, sheet = question, startRow = 2, startCol = 3, "Policing")
         writeData(wb, sheet = question, startRow = 2, startCol = 5, "Policing")
-        writeData(wb, sheet = question, startRow = 2, startCol = 7, "Policing")
+        #writeData(wb, sheet = question, startRow = 2, startCol = 7, "Policing")
         addStyle(wb, sheet = question, style = centered, rows = 1:2, cols = 2:7, gridExpand = TRUE)
         addStyle(wb, sheet = question, style = centeredrounded3, rows = 3:11, cols = 2:7, gridExpand = TRUE)
         if (chisq$p.value < 0.05) {
           mergeCells(wb, sheet = question, rows = 13, cols = 1:7)
           qmessage <- "The policing data proportions appear to differ significantly from the population proportions."
+          print(qmessage)
           globalVars$m3 <- qmessage
           writeData(wb, sheet = question, startRow = 13, startCol = 1, qmessage)
         }else{
@@ -1414,6 +1428,7 @@ server <- (function(input, output, session){
         }
         setColWidths(wb, sheet = question, cols = 1, widths = "auto", ignoreMergedCells = TRUE)
         
+      
         #########
         ### Q ###
         #########
@@ -1446,20 +1461,22 @@ server <- (function(input, output, session){
           rbind(acsracegender) %>%
           complete(Race, Gender, datatype, fill = list(proportion = 0)) %>%
           mutate(datatype = factor(datatype)) %>%
-          mutate(datatype = relevel(datatype, ref = "Policing Records"))
+          mutate(datatype = relevel(datatype, ref = "Policing Records")) %>%
+          filter(Gender != "Missing gender data") %>%  ###### ADDED
+          filter(Race != "Missing race data") ###### ADDED
         
         p <- qdata %>%
-          ggplot(aes(x = Gender, y = Race, size = proportion, fill = datatype, group = datatype, alpha = datatype)) +
-          geom_point(shape = 21, stroke = 0.6, color = "black") +
-          scale_size(range = c(1,20)) +
-          scale_fill_manual(values = c("red","gray30")) +
-          scale_alpha_manual(values = c(0.7, 0.9)) +
-          ylab("Race") +
-          scale_x_discrete(name = "Gender", position = "top") +
-          scale_y_discrete(limits = rev) +
-          guides(fill = guide_legend(title = NULL, override.aes = list(size = 4), label.position = "bottom"), size = "none", group = "none", alpha = "none") +
-          theme_bw() +
-          theme(legend.text=element_text(size=8), legend.position = "bottom", legend.direction = "horizontal", legend.box = "horizontal", legend.key = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+          ggplot(aes(x = Race, y = proportion, fill = Gender, alpha = datatype)) +
+          geom_bar(stat = "identity", position = "dodge") + ###### ADDED
+          ylab("Proportion") +
+          xlab("Race") +
+          scale_fill_manual(values = c("purple", "blue"), 
+                           guide = guide_legend(title = "Gender"),
+                           labels = c("Man", "Women")) +
+          scale_alpha_manual(values = c(0.3, 0.7),
+                             guide = guide_legend(title = "Data Type"),
+                             labels = c("Policing Records", "Local Population")) +
+          theme_bw()
         
         globalVars$p4 <- p
         
@@ -1530,20 +1547,22 @@ server <- (function(input, output, session){
           rbind(acsracegender) %>%
           complete(Race, Gender, datatype, fill = list(proportion = 0)) %>%
           mutate(datatype = factor(datatype)) %>%
-          mutate(datatype = relevel(datatype, ref = "Policing Records"))
+          mutate(datatype = relevel(datatype, ref = "Policing Records")) %>%
+          filter(Gender != "Missing gender data") %>%  ###### ADDED
+          filter(Race != "Missing race data") ###### ADDED
         
         p <- qdata %>%
-          ggplot(aes(x = Gender, y = Race, size = proportion, fill = datatype, group = datatype, alpha = datatype)) +
-          geom_point(shape = 21, stroke = 0.6, color = "black") +
-          scale_size(range = c(1,20)) +
-          scale_fill_manual(values = c("red","gray30")) +
-          scale_alpha_manual(values = c(0.7, 0.9)) +
-          ylab("Race") +
-          scale_x_discrete(name = "Gender", position = "top") +
-          scale_y_discrete(limits = rev) +
-          guides(fill = guide_legend(title = NULL, override.aes = list(size = 4), label.position = "bottom"), size = "none", group = "none", alpha = "none") +
-          theme_bw() +
-          theme(legend.text=element_text(size=8), legend.position = "bottom", legend.direction = "horizontal", legend.box = "horizontal", legend.key = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+          ggplot(aes(x = Race, y = proportion, fill = Gender, alpha = datatype)) +
+          geom_bar(stat = "identity", position = "dodge") + ###### ADDED
+          ylab("Proportion") +
+          xlab("Race") +
+          scale_fill_manual(values = c("purple", "blue"), 
+                            guide = guide_legend(title = "Gender"),
+                            labels = c("Man", "Women")) +
+          scale_alpha_manual(values = c(0.3, 0.7),
+                             guide = guide_legend(title = "Data Type"),
+                             labels = c("Policing Records", "Local Population")) +
+          theme_bw()
         
         globalVars$p5 <- p
         
@@ -1571,13 +1590,15 @@ server <- (function(input, output, session){
         if (chisq$p.value < 0.05) {
           mergeCells(wb, sheet = question, rows = 13, cols = 1:7)
           qmessage <- "The policing data proportions appear to differ significantly from the population proportions."
-          globalVars$m5 <- qmessage
-          writeData(wb, sheet = question, startRow = 13, startCol = 1, qmessage)
+          encoded_message <- iconv(qmessage, from = "", to = "UTF-8")  # Convert to UTF-8 encoding
+          globalVars$m5 <- encoded_message
+          writeData(wb, sheet = question, startRow = 13, startCol = 1, encoded_message)
         }else{
           mergeCells(wb, sheet = question, rows = 13, cols = 1:7)
           qmessage <- "The policing data proportions do not appear to differ significantly from the population proportions."
-          globalVars$m5 <- qmessage
-          writeData(wb, sheet = question, startRow = 13, startCol = 1, qmessage)
+          encoded_message <- iconv(qmessage, from = "", to = "UTF-8")  # Convert to UTF-8 encoding
+          globalVars$m5 <- encoded_message
+          writeData(wb, sheet = question, startRow = 13, startCol = 1, encoded_message)
         }
         setColWidths(wb, sheet = question, cols = 1, widths = "auto", ignoreMergedCells = TRUE)
         
@@ -1597,11 +1618,14 @@ server <- (function(input, output, session){
           ungroup %>%
           complete(Race, Gender, fill = list(arrests = 0, incidents = 0)) %>%
           mutate(proportion = arrests/(incidents + .Machine$double.eps)) %>%
-          select(-arrests, -incidents)
+          select(-arrests, -incidents) %>%
+          filter(Gender != "Missing gender data") %>%  ###### ADDED
+          filter(Race != "Missing race data") ###### ADDED
         
-        p <- qdata %>%
+        p <- qdata %>% 
           ggplot(aes(x = Race, y = proportion, fill = Gender)) +
           geom_col(position = position_dodge()) +
+          scale_fill_manual(values = c("cyan", "grey30")) + ###### ADDED
           scale_y_continuous(name = "Proportion of Incidents\nResulting in Arrest", limits = c(0,1)) +
           theme(legend.position = "top", legend.direction = "horizontal", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
         
@@ -1632,12 +1656,15 @@ server <- (function(input, output, session){
           group_by(Race, Gender) %>%
           summarise(meanbond = mean(BondAmount, na.rm = TRUE)) %>%
           ungroup %>%
-          complete(Race, Gender, fill = list(meanbond = NA))
+          complete(Race, Gender, fill = list(meanbond = NA)) %>%
+          filter(Gender != "Missing gender data") %>%  ###### ADDED
+          filter(Race != "Missing race data") ###### ADDED
         
         p <- qdata %>%
           ggplot(aes(x = Race, y = meanbond, fill = Gender)) +
           geom_col(position = position_dodge()) +
-          scale_y_continuous(name = "Mean Bond Amount") +
+          scale_fill_manual(values = c("cyan", "grey30")) + ###### ADDED
+          scale_y_continuous(name = "Mean Bond Amount (USD)") + ###### ADDED
           theme(legend.position = "top", legend.direction = "horizontal", axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
         
         globalVars$p7 <- p
@@ -1668,7 +1695,13 @@ server <- (function(input, output, session){
           ungroup %>%
           complete(Patrol, Race, fill = list(count = 0)) %>%
           group_by(Patrol) %>%
-          mutate(proportion = prop.table(count))
+          mutate(proportion = prop.table(count)) %>%
+          filter(Race != "Missing race data") ###### ADDED
+        
+        # Reorder Race within each Patrol group based on proportion
+        qdata <- qdata %>%
+          arrange(Patrol, desc(proportion)) %>%
+          mutate(Race = factor(Race, levels = Race))
         
         p <- ggplot() +
           geom_col(data = qdata, aes(x = Patrol, y = proportion, fill = Race)) +
@@ -1725,9 +1758,16 @@ server <- (function(input, output, session){
           ungroup %>%
           complete(Officer, Race, fill = list(count = 0)) %>%
           group_by(Officer) %>%
-          mutate(proportion = prop.table(count))
+          mutate(proportion = prop.table(count)) %>%
+         filter(Race != "Missing race data") ###### ADDED
         
-        p <- ggplot() +
+        
+        # Reorder Race within each Officer group based on proportion
+        qdata <- qdata %>%
+          arrange(Officer, desc(proportion)) %>%
+          mutate(Race = factor(Race, levels = Race))
+        
+         p <- ggplot() +
           geom_col(data = qdata, aes(x = Officer, y = proportion, fill = Race)) +
           ylab("Proportion") +
           theme(axis.text.x = element_text(angle = 60, vjust = 1, hjust=1))
@@ -1766,10 +1806,22 @@ server <- (function(input, output, session){
           mutate(Day = factor(Day, levels = c("Mon","Tue","Wed","Thu","Fri","Sat","Sun"))) %>%
           mutate(Time = as.factor(Time)) 
         
+        day_colors <- c( ###### ADDED
+          "Mon" = "#1f77b4",  # Blue
+          "Tue" = "#ff7f0e",  # Orange
+          "Wed" = "#2ca02c",  # Green
+          "Thu" = "#9467bd",  # Purple
+          "Fri" = "#8c564b",  # Brown
+          "Sat" = "#e377c2",  # Pink
+          "Sun" = "#17becf"   # Cyan
+        )
+        
+        
         p <- qdata %>%
           ggplot(aes(x = Time, y = count, group = Day, color = Day)) +
-          geom_line() +
-          scale_y_continuous(name = "Incidents") +
+          geom_line(size = 1.5, alpha = 0.7) +
+          scale_color_manual(values = day_colors) +  # Specify custom colors
+          scale_y_continuous(name = "Number of Incidents") + ###### ADDED
           scale_x_discrete(name = "Hour of Day") +
           theme(panel.grid.minor.y = element_blank())
         
@@ -1987,7 +2039,7 @@ server <- (function(input, output, session){
   )
   
   output$Q3_interp <- renderUI({
-    text <- paste("\U3033", globalVars$m3)
+    text <- paste("\U2022", globalVars$m3)
     withMathJax(tags$p(HTML(text)))
     
   })
@@ -2035,7 +2087,7 @@ server <- (function(input, output, session){
   )
   
   output$Q4_interp <- renderUI({
-    text <- paste("\U4044", globalVars$m4)
+    text <- paste("\U2022", globalVars$m4)
     withMathJax(tags$p(HTML(text)))
     
   })
@@ -2083,7 +2135,8 @@ server <- (function(input, output, session){
   )
   
   output$Q5_interp <- renderUI({
-    text <- paste("\U5055", globalVars$m5)
+    text <- paste("\U2022", globalVars$m5)
+    text <- iconv(text, from = "", to = "UTF-8")
     withMathJax(tags$p(HTML(text)))
     
   })
