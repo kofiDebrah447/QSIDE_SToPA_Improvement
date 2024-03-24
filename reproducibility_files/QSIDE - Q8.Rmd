@@ -1,0 +1,72 @@
+---
+title: "QSIDE - Q1"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+date: "2024-03-24"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Instructions for Generating QSIDE Data Crunching App Figures
+
+### 1. Install necessary packages in R. These include ggplot2, tidyverse, and dplyr. To do so, use install.packages().
+
+### 2. Inspect the sample dataset. For the R Shiny app, the QSIDE team supplied Data from North Carolina.
+
+```{r}
+policingdata=read.csv("durhamdata.csv")
+head(policingdata)
+```
+### Format the DataFrame using tidyverse/dplyr. The steps are described below. 
+
+### First, check if the necessary data is available in the DataFrame. For this analysis, we will assume that the data is all available since we are using a sample dataset. To check if data is available in the running Shiny App, we use an if statement that looks like the following : if (all(c("Race", "Patrol") %in% colnames(policingdata))
+
+### For the Q8, the race and patrol variables must be available to answer the question. If there is missing data in these columns, filter them out. 
+
+### For this situation, we need to sort the data by race and parol values. 
+
+```{r}
+qdata <- policingdata %>%
+  group_by(Patrol, Race) %>%
+  summarise(count = n()) %>%
+  ungroup %>%
+  complete(Patrol, Race, fill = list(count = 0)) %>%
+  group_by(Patrol) %>%
+  mutate(proportion = prop.table(count)) %>%
+  filter(Race != "Missing race data") ###### ADDED
+
+qdata <- qdata %>%
+  arrange(Patrol, desc(proportion)) %>%
+  mutate(Race = factor(Race, levels = Race))
+```
+
+### From there, you can run plots in R using the filtered qdata DataFrame. To display this data, we are using a vertical bar graph. We will also facet_wrap by race to make the results easily accessible.
+
+```{r}
+p <- ggplot() +
+  geom_col(data = qdata, aes(x = Patrol, y = proportion), fill="skyblue4") +
+  ylab("Proportion")+
+  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust=1), text = element_text(size = 15))
+p + facet_wrap(~Race)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
