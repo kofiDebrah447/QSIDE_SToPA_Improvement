@@ -1,0 +1,42 @@
+---
+title: "QSIDE - Q1"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+date: "2024-03-24"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Instructions for Generating QSIDE Data Crunching App Figures
+
+### 1. Install necessary packages in R. These include ggplot2, tidyverse, and dplyr. To do so, use install.packages().
+
+### 2. Inspect the sample dataset. For the R Shiny app, the QSIDE team supplied Data from North Carolina.
+
+```{r}
+policingdata=read.csv("durhamdata.csv")
+head(policingdata)
+```
+### Format the DataFrame using tidyverse/dplyr. The steps are described below. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
