@@ -1,0 +1,72 @@
+---
+title: "QSIDE - Q11"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+date: "2024-03-24"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Instructions for Generating QSIDE Data Crunching App Figures
+
+### 1. Install necessary packages in R. These include ggplot2, tidyverse, and dplyr. To do so, use install.packages().
+
+### 2. Inspect the sample dataset. For the R Shiny app, the QSIDE team supplied Data from North Carolina.
+
+```{r}
+policingdata=read.csv("durhamdata.csv")
+head(policingdata)
+```
+### Format the DataFrame using tidyverse/dplyr. The steps are described below. 
+
+### First, check if the necessary data is available in the DataFrame. For this analysis, we will assume that the data is all available since we are using a sample dataset. To check if data is available in the running Shiny App, we use an if statement that looks like the following : if (all(c("Race", "Gender", "UseOfForce) %in% colnames(policingdata))
+
+### For the Q11, the race, use of force, and gender variables must be available to answer the question. If there is missing data in these columns, filter them out. 
+
+### For this situation, we need to calculate the number of incidents where there is use of force in dplyr. 
+
+```{r}
+qdata <- policingdata %>%
+  filter(UseOfForce == "Yes") %>%
+  group_by(Race, Gender) %>%
+  summarise(incidents = n()) %>%
+  ungroup %>%
+  complete(Race, Gender, fill = list(incidents = 0)) %>%
+  mutate(proportion = incidents / sum(incidents)) %>%  
+  filter(Race != "Missing race data" & Gender != "Missing gender data")
+```
+
+### From there, you can run plots in R using the filtered qdata DataFrame. To display this data, we are using a horizontal bar graph. 
+
+```{r}
+p <- qdata %>%
+  ggplot(aes(x = proportion, y = Race)) +
+  geom_col(aes(fill=Gender), position = "dodge", width=0.8) +
+  ylab("Race") +
+  xlab("Proportion of Incidents") +
+  scale_fill_manual(values = c("tomato3", "skyblue4")) +
+  theme_bw() +
+  theme(legend.position = "bottom", text = element_text(size = 15))
+p
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
