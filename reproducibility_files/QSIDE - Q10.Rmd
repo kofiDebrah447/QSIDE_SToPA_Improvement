@@ -1,0 +1,91 @@
+---
+title: "QSIDE - Q1"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+date: "2024-03-24"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Instructions for Generating QSIDE Data Crunching App Figures
+
+### 1. Install necessary packages in R. These include ggplot2, tidyverse, and dplyr. To do so, use install.packages().
+
+### 2. Inspect the sample dataset. For the R Shiny app, the QSIDE team supplied Data from North Carolina.
+
+```{r}
+policingdata=read.csv("durhamdata.csv")
+head(policingdata)
+```
+### Format the DataFrame using tidyverse/dplyr. The steps are described below. 
+
+### First, check if the necessary data is available in the DataFrame. For this analysis, we will assume that the data is all available since we are using a sample dataset. To check if data is available in the running Shiny App, we use an if statement that looks like the following : if (all(c("Day", "Time") %in% colnames(policingdata))
+
+### For the Q10, the day and time variables must be available to answer the question. If there is missing data in these columns, filter them out. 
+
+### For this situation, we need to first separate the day and time variables using mutate in dplyr. The data is then sorted by day of the week, and each day is assigned a color. 
+
+```{r}
+
+policingdata <- policingdata %>%
+  mutate(DateTime = mdy_hm(DateTime, tz = "US/Eastern")) %>%
+  mutate(Date = date(DateTime), Day = wday(DateTime, label = TRUE), Time = as_hms(DateTime)) %>%
+  select(-DateTime)
+
+qdata <- policingdata %>%
+  select(Day, Time) %>%
+  mutate(Time = hour(Time)) %>%
+  group_by(Day, Time) %>%
+  summarise(count = n()) %>%
+  mutate(Day = factor(Day, levels = c("Mon","Tue","Wed","Thu","Fri","Sat","Sun"))) %>%
+  mutate(Time = as.factor(Time)) 
+
+day_colors <- c( 
+  "Mon" = "coral", 
+  "Tue" = "blue",  
+  "Wed" = "tomato3",  
+  "Thu" = "skyblue4",  
+  "Fri" = "yellow4",  
+  "Sat" = "seagreen",  
+  "Sun" = "palevioletred"   
+)
+
+```
+
+### From there, you can run plots in R using the filtered qdata DataFrame. To display this data, we are using a line graph. We facet_wrap by day to make the data accessible and use every third label to avoid x_label overcrowding.
+
+```{r}
+every_nth = function(n) {
+  return(function(x) {x[c(TRUE, rep(FALSE, n - 1))]})
+}
+
+p <- qdata %>%
+  ggplot(aes(x = Time, y = count, group = Day, color = Day)) +
+  geom_line(size = 1, alpha = 0.7) +
+  scale_color_manual(values = day_colors) +
+  scale_y_continuous(name = "Number of Incidents") +
+  scale_x_discrete(name = "Hour of Day",breaks = every_nth(n = 3)) +
+  theme(panel.grid.minor.y = element_blank(), text = element_text(size = 15))
+p +facet_wrap(~Day)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
