@@ -1,0 +1,19 @@
+---
+title: "References"
+output: html_document
+bibliography: bib.bib
+nocite: '@*'
+---
+
+
+
+```{r include=FALSE}
+knitr::write_bib(c( 
+                     #Shiny Libraries 
+                    "shiny", "shinyalert", "shinyjs", "shinycssloaders" , "shinymeta", 
+                    "shinythemes", "shinyAce" , "shinyBS", "DT", "stats" , 
+                     #Working Libraries  
+                    "tidyverse","zip", "tigris", "sf",
+                    "tidycensus", "labelled", "openxlsx", "lubridate", "hms"), width = 60) 
+
+```
