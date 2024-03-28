@@ -29,6 +29,8 @@ head(policingdata)
 
 ### For this situation, we need to find the incidents where people were stopped using dplyr. 
 
+### Question: Are subjects of specific intersectional identities stopped in street checks at higher rates?
+
 ```{r}
 qdata <- policingdata %>%
   filter(Stopped == "Yes") %>%
