@@ -97,12 +97,12 @@ server <- (function(input, output, session){
       
       # fill gender column select
       updateSelectizeInput(session, "select_gender_column", choices = c(colnames(globalVars$dataset)), selected = "Gender")
-
+      
       # fill gender selects
       updateSelectizeInput(session, "select_man", choices = c("", "Not in the Data", as.character(unique(globalVars$dataset[["Gender"]]))), selected = "Man")
       updateSelectizeInput(session, "select_woman", choices = c("", "Not in the Data", as.character(unique(globalVars$dataset[["Gender"]]))), selected = "Woman")
       
-    
+      
       # fill charge column selectize
       charges <- grep(x = colnames(globalVars$dataset), pattern = "_SELECTED_CHARGE_", value = TRUE)
       updateSelectizeInput(session, "select_charges", choices = colnames(globalVars$dataset), selected = charges)
@@ -131,13 +131,13 @@ server <- (function(input, output, session){
                                        "US/Pacific", "UTC"),
                            selected = unique(globalVars$dataset[["TimeZone"]]))
       # fill use of force column select
-      updateSelectizeInput(session, "select_useofforce", choices = c(colnames(globalVars$dataset)), selected = "UseOfForce")
+      updateSelectizeInput(session, "select_useofforce", choices = c("Not in the Data", colnames(globalVars$dataset)), selected = ifelse("UseOfForce" %in% colnames(globalVars$dataset), "UseOfForce", "Not in the Data"))
       
       # fill search conducted column select
-      updateSelectizeInput(session, "select_searchconducted", choices = c(colnames(globalVars$dataset)), selected = "SearchConducted")
+      updateSelectizeInput(session, "select_searchconducted", choices = c("Not in the Data", colnames(globalVars$dataset)), selected = ifelse("SearchConducted" %in% colnames(globalVars$dataset), "SearchConducted", "Not in the Data"))
       
       # fill stopped column select
-      updateSelectizeInput(session, "select_stopped", choices = c(colnames(globalVars$dataset)), selected = "Stopped")
+      updateSelectizeInput(session, "select_stopped", choices = c("Not in the Data", colnames(globalVars$dataset)), selected = ifelse("Stopped" %in% colnames(globalVars$dataset), "Stopped", "Not in the Data"))
       
       globalVars$clean <- TRUE
     }else{
@@ -173,13 +173,13 @@ server <- (function(input, output, session){
                            selected = )
       
       # fill use of force column select
-      updateSelectizeInput(session, "select_useofforce", choices = c(colnames(globalVars$dataset)), selected = "UseOfForce")
+      updateSelectizeInput(session, "select_useofforce", choices = c("Not in the Data", colnames(globalVars$dataset)), selected = "")
       
       # fill search conducted column select
-      updateSelectizeInput(session, "select_searchconducted", choices = c(colnames(globalVars$dataset)), selected = "SearchConducted")
+      updateSelectizeInput(session, "select_searchconducted", choices = c("Not in the Data", colnames(globalVars$dataset)), selected = "")
       
       # fill stopped column select
-      updateSelectizeInput(session, "select_stopped", choices = c(colnames(globalVars$dataset)), selected = "Stopped")
+      updateSelectizeInput(session, "select_stopped", choices = c("Not in the Data",colnames(globalVars$dataset)), selected = "")
       
       globalVars$clean <- FALSE
     }
@@ -201,7 +201,7 @@ server <- (function(input, output, session){
                  input$select_charges, input$select_arrest, input$select_arrestTypes, input$select_bond, input$select_patrol, input$select_arrestingofficer, 
                  input$select_date, input$select_timezone, input$select_useofforce, input$select_searchconducted, input$selected_stopped,
                  input$census_api_key, input$census_year, input$geolevel, input$state, input$county, input$municipality)){
-      shinyjs::disable("completeAnalysis")
+      shinyjs::enable("completeAnalysis")
     }else{
       shinyjs::enable("completeAnalysis")
     }
@@ -223,7 +223,7 @@ server <- (function(input, output, session){
     updateSelectizeInput(session, "select_notlisted", choices = race.choices, selected = "")
     
     # update all column inputs to have column names to select
-    otherselects <- c(setdiff(colnames(globalVars$dataset), input$select_race_column))
+    otherselects <- c("Not in the Data", setdiff(colnames(globalVars$dataset), input$select_race_column))
     # fill race column select
     #updateSelectizeInput(session, "select_race_column", choices = c(input$select_race_column, otherselects), selected=input$select_race_column)
     # fill gender column select
@@ -251,10 +251,10 @@ server <- (function(input, output, session){
   observeEvent(input$select_aian,{
     globalVars$changed <- TRUE
     updateUI(isolate(globalVars$changed))
-
+    
     # update all column inputs to have column names to select
     otherselects <- c("","Not in the Data", setdiff(as.character(unique(globalVars$dataset[[input$select_race_column]])),
-                                           c(input$select_aian, input$select_asian, input$select_black, input$select_hispanic, input$select_nhpi, input$select_white, input$select_multi, input$select_notlisted)))
+                                                    c(input$select_aian, input$select_asian, input$select_black, input$select_hispanic, input$select_nhpi, input$select_white, input$select_multi, input$select_notlisted)))
     # fill race selects
     # updateSelectizeInput(session, "select_aian", choices = c(input$select_aian, otherselects), selected = input$select_aian)
     updateSelectizeInput(session, "select_asian", choices = c(input$select_asian, otherselects), selected = input$select_asian)
@@ -265,7 +265,7 @@ server <- (function(input, output, session){
     updateSelectizeInput(session, "select_multi", choices = c(input$select_multi, otherselects), selected = input$select_multi)
     updateSelectizeInput(session, "select_notlisted", choices = c(input$select_notlisted, otherselects), selected = input$select_notlisted)
   })
-
+  
   
   observeEvent(input$select_asian,{
     globalVars$changed <- TRUE
@@ -273,8 +273,8 @@ server <- (function(input, output, session){
     
     # update all column inputs to have column names to select
     otherselects <- c("","Not in the Data", setdiff(as.character(unique(globalVars$dataset[[input$select_race_column]])), 
-                                           c(input$select_aian, input$select_asian, input$select_black, input$select_hispanic, input$select_nhpi, input$select_white, input$select_multi, input$select_notlisted)))
-
+                                                    c(input$select_aian, input$select_asian, input$select_black, input$select_hispanic, input$select_nhpi, input$select_white, input$select_multi, input$select_notlisted)))
+    
     # fill race selects
     updateSelectizeInput(session, "select_aian", choices = c(input$select_aian, otherselects), selected = input$select_aian)
     #updateSelectizeInput(session, "select_asian", choices = c(input$select_asian, otherselects), selected = input$select_asian)
@@ -289,10 +289,10 @@ server <- (function(input, output, session){
   observeEvent(input$select_black,{
     globalVars$changed <- TRUE
     updateUI(isolate(globalVars$changed))
-
+    
     # update all column inputs to have column names to select
     otherselects <- c("","Not in the Data", setdiff(as.character(unique(globalVars$dataset[[input$select_race_column]])), 
-                                                 c(input$select_aian, input$select_asian, input$select_black, input$select_hispanic, input$select_nhpi, input$select_white, input$select_multi, input$select_notlisted)))
+                                                    c(input$select_aian, input$select_asian, input$select_black, input$select_hispanic, input$select_nhpi, input$select_white, input$select_multi, input$select_notlisted)))
     
     # fill race selects
     updateSelectizeInput(session, "select_aian", choices = c(input$select_aian, otherselects), selected = input$select_aian)
@@ -311,7 +311,7 @@ server <- (function(input, output, session){
     
     # update all column inputs to have column names to select
     otherselects <- c("","Not in the Data", setdiff(as.character(unique(globalVars$dataset[[input$select_race_column]])), 
-                                                 c(input$select_aian, input$select_asian, input$select_black, input$select_hispanic, input$select_nhpi, input$select_white, input$select_multi, input$select_notlisted)))
+                                                    c(input$select_aian, input$select_asian, input$select_black, input$select_hispanic, input$select_nhpi, input$select_white, input$select_multi, input$select_notlisted)))
     
     # fill race selects
     updateSelectizeInput(session, "select_aian", choices = c(input$select_aian, otherselects), selected = input$select_aian)
@@ -330,7 +330,7 @@ server <- (function(input, output, session){
     
     # update all column inputs to have column names to select
     otherselects <- c("","Not in the Data", setdiff(as.character(unique(globalVars$dataset[[input$select_race_column]])), 
-                                                 c(input$select_aian, input$select_asian, input$select_black, input$select_hispanic, input$select_nhpi, input$select_white, input$select_multi, input$select_notlisted)))
+                                                    c(input$select_aian, input$select_asian, input$select_black, input$select_hispanic, input$select_nhpi, input$select_white, input$select_multi, input$select_notlisted)))
     
     # fill race selects
     updateSelectizeInput(session, "select_aian", choices = c(input$select_aian, otherselects), selected = input$select_aian)
@@ -349,7 +349,7 @@ server <- (function(input, output, session){
     
     # update all column inputs to have column names to select
     otherselects <- c("","Not in the Data", setdiff(as.character(unique(globalVars$dataset[[input$select_race_column]])), 
-                                                 c(input$select_aian, input$select_asian, input$select_black, input$select_hispanic, input$select_nhpi, input$select_white, input$select_multi, input$select_notlisted)))
+                                                    c(input$select_aian, input$select_asian, input$select_black, input$select_hispanic, input$select_nhpi, input$select_white, input$select_multi, input$select_notlisted)))
     
     # fill race selects
     updateSelectizeInput(session, "select_aian", choices = c(input$select_aian, otherselects), selected = input$select_aian)
@@ -369,7 +369,7 @@ server <- (function(input, output, session){
     
     # update all column inputs to have column names to select
     otherselects <- c("","Not in the Data", setdiff(as.character(unique(globalVars$dataset[[input$select_race_column]])), 
-                                           c(input$select_aian, input$select_asian, input$select_black, input$select_hispanic, input$select_nhpi, input$select_white, input$select_multi, input$select_notlisted)))
+                                                    c(input$select_aian, input$select_asian, input$select_black, input$select_hispanic, input$select_nhpi, input$select_white, input$select_multi, input$select_notlisted)))
     
     # fill race selects
     updateSelectizeInput(session, "select_aian", choices = c(input$select_aian, otherselects), selected = input$select_aian)
@@ -382,6 +382,7 @@ server <- (function(input, output, session){
     updateSelectizeInput(session, "select_notlisted", choices = c(input$select_notlisted, otherselects), selected = input$select_notlisted)
   })
   
+  
   observeEvent(input$select_notlisted,{
     globalVars$changed <- TRUE
     updateUI(isolate(globalVars$changed))
@@ -389,7 +390,7 @@ server <- (function(input, output, session){
     
     # update all column inputs to have column names to select
     otherselects <- c("","Not in the Data", setdiff(as.character(unique(globalVars$dataset[[input$select_race_column]])), 
-                                           c(input$select_aian, input$select_asian, input$select_black, input$select_hispanic, input$select_nhpi, input$select_white, input$select_multi, input$select_notlisted)))
+                                                    c(input$select_aian, input$select_asian, input$select_black, input$select_hispanic, input$select_nhpi, input$select_white, input$select_multi, input$select_notlisted)))
     
     # fill race selects
     updateSelectizeInput(session, "select_aian", choices = c(input$select_aian, otherselects), selected = input$select_aian)
@@ -411,7 +412,7 @@ server <- (function(input, output, session){
     updateSelectizeInput(session, "select_woman", choices = c("","Not in the Data", as.character(unique(globalVars$dataset[[input$select_gender_column]]))), selected = input$select_man)
     
     # update all column inputs to have column names to select
-    otherselects <- c(setdiff(colnames(globalVars$dataset), input$select_gender_column))
+    otherselects <- c("Not in the Data", setdiff(colnames(globalVars$dataset), input$select_gender_column))
     # fill race column select
     updateSelectizeInput(session, "select_race_column", choices = c(input$select_race_column, otherselects), selected=input$select_race_column)
     # fill gender column select
@@ -466,7 +467,7 @@ server <- (function(input, output, session){
     updateUI(isolate(globalVars$changed))
     
     # update all column inputs to have column names to select
-    otherselects <- c(setdiff(colnames(globalVars$dataset), input$select_charges))
+    otherselects <- c("Not in the Data", setdiff(colnames(globalVars$dataset), input$select_charges))
     # fill race column select
     updateSelectizeInput(session, "select_race_column", choices = c(input$select_race_column, otherselects), selected=input$select_race_column)
     # fill gender column select
@@ -497,6 +498,7 @@ server <- (function(input, output, session){
     
     # fill arrest type selectize 
     
+    
     if(globalVars$clean){
       updateSelectizeInput(session, "select_arrestTypes", choices = unique(globalVars$dataset[[input$select_arrest]]), selected="TRUE")
     }else{
@@ -504,7 +506,7 @@ server <- (function(input, output, session){
     }
     
     # update all column inputs to have column names to select
-    otherselects <- c(setdiff(colnames(globalVars$dataset), input$select_charges))
+    otherselects <- c("Not in the Data", setdiff(colnames(globalVars$dataset), input$select_charges))
     # fill race column select
     updateSelectizeInput(session, "select_race_column", choices = c(input$select_race_column, otherselects), selected=input$select_race_column)
     # fill gender column select
@@ -539,7 +541,7 @@ server <- (function(input, output, session){
     updateUI(isolate(globalVars$changed))
     
     # update all column inputs to have column names to select
-    otherselects <- c(setdiff(colnames(globalVars$dataset), input$select_bond))
+    otherselects <- c("Not in the Data", setdiff(colnames(globalVars$dataset), input$select_bond))
     # fill race column select
     updateSelectizeInput(session, "select_race_column", choices = c(input$select_race_column, otherselects), selected=input$select_race_column)
     # fill gender column select
@@ -569,7 +571,7 @@ server <- (function(input, output, session){
     updateUI(isolate(globalVars$changed))
     
     # update all column inputs to have column names to select
-    otherselects <- c(setdiff(colnames(globalVars$dataset), input$select_patrol))
+    otherselects <- c("Not in the Data", setdiff(colnames(globalVars$dataset), input$select_patrol))
     # fill race column select
     updateSelectizeInput(session, "select_race_column", choices = c(input$select_race_column, otherselects), selected=input$select_race_column)
     # fill gender column select
@@ -599,7 +601,7 @@ server <- (function(input, output, session){
     updateUI(isolate(globalVars$changed))
     
     # update all column inputs to have column names to select
-    otherselects <- c(setdiff(colnames(globalVars$dataset), input$select_arrestingofficer))
+    otherselects <- c("Not in the Data", setdiff(colnames(globalVars$dataset), input$select_arrestingofficer))
     # fill race column select
     updateSelectizeInput(session, "select_race_column", choices = c(input$select_race_column, otherselects), selected=input$select_race_column)
     # fill gender column select
@@ -629,7 +631,7 @@ server <- (function(input, output, session){
     updateUI(isolate(globalVars$changed))
     
     # update all column inputs to have column names to select
-    otherselects <- c(setdiff(colnames(globalVars$dataset), input$select_date))
+    otherselects <- c("Not in the Data", setdiff(colnames(globalVars$dataset), input$select_date))
     # fill race column select
     updateSelectizeInput(session, "select_race_column", choices = c(input$select_race_column, otherselects), selected=input$select_race_column)
     # fill gender column select
@@ -733,7 +735,7 @@ server <- (function(input, output, session){
     updateUI(isolate(globalVars$changed))
     
     # update all column inputs to have column names to select
-    otherselects <- c(setdiff(colnames(globalVars$dataset), input$select_useofforce))
+    otherselects <- c("Not in the Data", setdiff(colnames(globalVars$dataset), input$select_useofforce))
     # fill race column select
     updateSelectizeInput(session, "select_race_column", choices = c(input$select_race_column, otherselects), selected=input$select_race_column)
     # fill gender column select
@@ -760,12 +762,13 @@ server <- (function(input, output, session){
   
   ##########
   
+  
   observeEvent(input$select_searchconducted,{
     globalVars$changed <- TRUE
     updateUI(isolate(globalVars$changed))
     
     # update all column inputs to have column names to select
-    otherselects <- c(setdiff(colnames(globalVars$dataset), input$select_searchconducted))
+    otherselects <- c("Not in the Data", setdiff(colnames(globalVars$dataset), input$select_searchconducted))
     # fill race column select
     updateSelectizeInput(session, "select_race_column", choices = c(input$select_race_column, otherselects), selected=input$select_race_column)
     # fill gender column select
@@ -797,7 +800,7 @@ server <- (function(input, output, session){
     updateUI(isolate(globalVars$changed))
     
     # update all column inputs to have column names to select
-    otherselects <- c(setdiff(colnames(globalVars$dataset), input$select_stopped))
+    otherselects <- c("Not in the Data", setdiff(colnames(globalVars$dataset), input$select_stopped))
     # fill race column select
     updateSelectizeInput(session, "select_race_column", choices = c(input$select_race_column, otherselects), selected=input$select_race_column)
     # fill gender column select
@@ -920,6 +923,7 @@ server <- (function(input, output, session){
     }
   })
   
+  
   observeEvent(input$sample_data_choice,{
     if(globalVars$sample){
       if(input$sample_data_choice=="Durham NC"){
@@ -946,8 +950,9 @@ server <- (function(input, output, session){
   
   cleanData <- function(){
     showModal(modalDialog("Cleaning the Data!", footer=NULL))
-
+    
     policingdata <- globalVars$dataset
+    
     
     # Race
     racecolumn <- ifelse(input$select_race_column=="Not in the Data", NA, input$select_race_column)
@@ -986,13 +991,14 @@ server <- (function(input, output, session){
     timezone <- input$select_timezone
     
     # Use of Force
-    useofforcecolumn <- input$select_useofforce 
+    useofforcecolumn <- ifelse(input$select_useofforce=="Not in the Data", NA, input$select_useofforce) 
     
     # Search Conducted
-    searchconductedcolumn <- input$select_searchconducted
+    searchconductedcolumn <- ifelse(input$select_searchconducted=="Not in the Data", NA, input$select_searchconducted)
     
     # Stopped
-    stoppedcolumn <- input$select_stopped
+    stoppedcolumn <- ifelse(input$select_stopped=="Not in the Data", NA, input$select_stopped)
+    
     
     #################################
     ### Tidy up policing data set ###
@@ -1069,7 +1075,7 @@ server <- (function(input, output, session){
       rename(Officer = !!officercolumn) %>%
       mutate(Officer = factor(Officer))
     
-   # Rename Dates
+    # Rename Dates
     policingdata <- policingdata %>%
       rename(DateTime = !!datetimecolumn) %>%
       mutate(TimeZone = input$select_timezone)
@@ -1260,7 +1266,6 @@ server <- (function(input, output, session){
           # Fix Gender
           mutate(Gender = factor(Gender, levels = c("Man", "Woman", "Missing gender data")))
         
-        
         # Make list of all possible charges
         chargelist <- policingdata %>%
           select(starts_with("_SELECTED_CHARGE_"))%>%
@@ -1284,12 +1289,11 @@ server <- (function(input, output, session){
           paste0(collapse = "|")
         tmp <- policingdata %>%
           select(starts_with("_SELECTED_CHARGE_"))
-          #select(all_of(input$select_charges))
+        #select(all_of(input$select_charges))
         tmp[] <- tmp %>%
           lapply(function(x) str_detect(x, regex(trafficcharges, ignore_case = TRUE)))
         policingdata <- policingdata %>%
           mutate(traffic = apply(tmp, 1, function(x) any(x, na.rm = TRUE)))
-
         # Identify firearms/drug possession
         # May eventually need user input to identify relevant charges
         druggunwords <- c("firearm", "possess control", "possess cs", "substance", "weapon") %>%
@@ -1303,7 +1307,7 @@ server <- (function(input, output, session){
           paste0(collapse = "|")
         tmp <- policingdata %>%
           select(starts_with("_SELECTED_CHARGE_"))
-          #select(all_of(input$select_charges))
+        #select(all_of(input$select_charges))
         tmp[] <- tmp %>%
           lapply(function(x) str_detect(x, regex(drugguncharges, ignore_case = TRUE)))
         policingdata <- policingdata %>%
@@ -1328,7 +1332,7 @@ server <- (function(input, output, session){
           paste0(collapse = "|")
         tmp <- policingdata %>%
           select(starts_with("_SELECTED_CHARGE_"))
-          #select(all_of(input$select_charges))
+        #select(all_of(input$select_charges))
         tmp[] <- tmp %>%
           lapply(function(x) str_detect(x, regex(qolcharges, ignore_case = TRUE)))
         policingdata <- policingdata %>%
@@ -1337,20 +1341,26 @@ server <- (function(input, output, session){
         # Dump raw charges
         policingdata <- policingdata %>%
           select(-starts_with("_SELECTED_CHARGE_"))
-          #select(-input$select_charges) 
+        #select(-input$select_charges) 
         
-        # Put in nice order
+        # Define the columns you wish to relocate, in order
+        desired_order <- c("Race", "Gender", "traffic", "Arrest", "BondAmount", "druggun",
+                           "Patrol", "Officer", "Date", "Day", "Time", "qol", "UseOfForce",
+                           "SearchConducted", "Stopped")
+        
+        # Find which of those columns actually exist in your data frame
+        existing_columns <- desired_order[desired_order %in% names(policingdata)]
+        
+        # Use relocate() with only the existing columns
         policingdata <- policingdata %>%
-          relocate(Race, Gender, traffic, Arrest, BondAmount, druggun, Patrol, Officer, Date, Day, Time, qol, UseOfForce, SearchConducted, Stopped) %>%
-          as.data.frame %>%
+          relocate(all_of(existing_columns)) %>%
+          as.data.frame() %>%
           remove_attributes("spec")
-      
         
         
         ###########################
         ### Set up Excel output ###
         ###########################
-        
         numq <- 13
         wb <- createWorkbook()
         for (i in 1:13) {
@@ -1398,7 +1408,7 @@ server <- (function(input, output, session){
         #answerable_count <- analyze_answerable_questions(policingdata)
         #cat("Number of questions answered are ", answerable_count)
         
-    
+        
         
         
         #########
@@ -1454,7 +1464,7 @@ server <- (function(input, output, session){
             facet_wrap(~Gender)+
             theme_bw() +
             theme(axis.text.x = element_text(angle = 45, hjust = 1), text = element_text(size = 15)) 
-
+          
           globalVars$p1 <- p
           
           qExcel <- qdata %>%
@@ -1497,6 +1507,7 @@ server <- (function(input, output, session){
             text <- "Data for question Q1 is missing."
             return(tags$p(text))
           })
+          globalVars$t1 <- NULL
         }
         
         
@@ -1509,8 +1520,8 @@ server <- (function(input, output, session){
         
         # Check if data is available for analysis
         if (all(c("Race", "Gender", "traffic") %in% colnames(policingdata))) {
-        
-        # Racial breakdown of traffic-related offenses
+          
+          # Racial breakdown of traffic-related offenses
           observed <- policingdata %>%
             filter(traffic == TRUE) %>%
             group_by(Race, Gender) %>%
@@ -1555,7 +1566,7 @@ server <- (function(input, output, session){
             facet_wrap(~Gender)+
             theme_bw() +
             theme(axis.text.x = element_text(angle = 45, hjust = 1), text = element_text(size = 15)) 
-
+          
           
           globalVars$p2 <- p
           
@@ -1598,6 +1609,7 @@ server <- (function(input, output, session){
             text <- "Data for question Q2 is missing."
             return(tags$p(text))
           })
+          globalVars$t2 <- NULL
         }
         
         #########
@@ -1653,7 +1665,7 @@ server <- (function(input, output, session){
             facet_wrap(~Gender)+
             theme_bw() +
             theme(axis.text.x = element_text(angle = 45, hjust = 1), text = element_text(size = 15)) 
-
+          
           globalVars$p3 <- p
           
           qExcel <- qdata %>%
@@ -1695,8 +1707,9 @@ server <- (function(input, output, session){
             text <- "Data for question Q3 is missing."
             return(tags$p(text))
           })
+          globalVars$t3 <- NULL
         }
-
+        
         
         #########
         ### Q ###
@@ -1750,7 +1763,7 @@ server <- (function(input, output, session){
             facet_wrap(~Gender)+  
             theme_bw() +
             theme(axis.text.x = element_text(angle = 45, hjust = 1), text = element_text(size = 15)) 
-
+          
           globalVars$p4 <- p
           
           qExcel <- qdata %>%
@@ -1792,9 +1805,10 @@ server <- (function(input, output, session){
             text <- "Data for question Q4 is missing."
             return(tags$p(text))
           })
+          globalVars$t4 <- NULL
         }
         
-
+        
         
         #########
         ### Q ###
@@ -1805,8 +1819,8 @@ server <- (function(input, output, session){
         
         # Check if data is available for analysis
         if (all(c("Race", "Gender", "Arrest") %in% colnames(policingdata))) {
-         
-        # Racial breakdown of arrests
+          
+          # Racial breakdown of arrests
           observed <- policingdata %>%
             filter(Arrest == TRUE) %>%
             group_by(Race, Gender) %>%
@@ -1850,7 +1864,7 @@ server <- (function(input, output, session){
             facet_wrap(~Gender)+ 
             theme_bw() +
             theme(axis.text.x = element_text(angle = 45, hjust = 1), text = element_text(size = 15)) 
-
+          
           globalVars$p5 <- p
           
           qExcel <- qdata %>%
@@ -1892,8 +1906,9 @@ server <- (function(input, output, session){
             text <- "Data for question Q5 is missing."
             return(tags$p(text))
           })
+          globalVars$t5 <- NULL
         }
-
+        
         
         #########
         ### Q ###
@@ -1946,7 +1961,7 @@ server <- (function(input, output, session){
             facet_wrap(~Gender)+ 
             theme_bw() +
             theme(axis.text.x = element_text(angle = 45, hjust = 1), text = element_text(size = 15)) 
-
+          
           globalVars$p6 <- p
           
           qExcel <- qdata %>%
@@ -1967,6 +1982,7 @@ server <- (function(input, output, session){
             text <- "Data for question Q6 is missing."
             return(tags$p(text))
           })
+          globalVars$t6 <- NULL
         }
         
         
@@ -1998,7 +2014,7 @@ server <- (function(input, output, session){
             scale_fill_manual(values = c("skyblue", "grey30")) +
             theme_bw() +
             theme(legend.position = "bottom", text = element_text(size = 15))  
-        
+          
           
           globalVars$p7 <- p
           
@@ -2020,6 +2036,7 @@ server <- (function(input, output, session){
             text <- "Data for question Q7 is missing."
             return(tags$p(text))
           })
+          globalVars$t7 <- NULL
         }
         
         
@@ -2034,9 +2051,9 @@ server <- (function(input, output, session){
         if (all(c("Patrol", "Race") %in% colnames(policingdata))) {
           
           modifiedpolicingdata <- policingdata
-         
+          
           modifiedpolicingdata$Race <- ifelse(modifiedpolicingdata$Race %in% c("White", "Black"), modifiedpolicingdata$Race, "Other")
-
+          
           qdata <- modifiedpolicingdata %>%
             group_by(Patrol, Race) %>%
             summarise(count = n()) %>%
@@ -2045,9 +2062,9 @@ server <- (function(input, output, session){
             group_by(Patrol) %>%
             mutate(proportion = prop.table(count)) %>%
             filter(Race != "Missing race data") ###### ADDED
-
-
-        # Reorder Race within each Patrol group based on proportion
+          
+          
+          # Reorder Race within each Patrol group based on proportion
           qdata <- qdata %>%
             arrange(Patrol, desc(proportion)) %>%
             mutate(Race = factor(Race, levels = Race))
@@ -2056,9 +2073,9 @@ server <- (function(input, output, session){
           
           # Manually map these codes to "White", "Black", or "Other"
           modifiedqdata$Race <- dplyr::recode(modifiedqdata$Race,
-                                             `3` = "White",  
-                                             `6` = "Black", 
-                                             .default = "Other") 
+                                              `3` = "White",  
+                                              `6` = "Black", 
+                                              .default = "Other") 
           
           p <- ggplot() +
             geom_col(data = modifiedqdata, aes(x = Patrol, y = proportion), fill="skyblue") +
@@ -2072,22 +2089,23 @@ server <- (function(input, output, session){
             select(-count) %>%
             pivot_wider(names_from = c("Race"), values_from = "proportion") 
           
-            globalVars$t8 <- qExcel
+          globalVars$t8 <- qExcel
           
           
-            writeData(wb, sheet = question, x = qExcel, startRow = 2, borderStyle = openxlsx_getOp("borderStyle", "none"), headerStyle = NULL)
-            writeData(wb, sheet = question, startRow = 1, startCol = 2, "Race")
-            mergeCells(wb, sheet = question, rows = 1, cols = 2:10)
-            addStyle(wb, sheet = question, style = centered, rows = 1:2, cols = 2:10, gridExpand = TRUE)
-            setColWidths(wb, sheet = question, cols = 1, widths = "auto", ignoreMergedCells = TRUE)
-            setColWidths(wb, sheet = question, cols = 2:10, widths = 20, ignoreMergedCells = TRUE)
-            addStyle(wb, sheet = question, style = centeredrounded3, rows = 3:(nrow(qExcel) + 2), cols = 2:10, gridExpand = TRUE)
+          writeData(wb, sheet = question, x = qExcel, startRow = 2, borderStyle = openxlsx_getOp("borderStyle", "none"), headerStyle = NULL)
+          writeData(wb, sheet = question, startRow = 1, startCol = 2, "Race")
+          mergeCells(wb, sheet = question, rows = 1, cols = 2:10)
+          addStyle(wb, sheet = question, style = centered, rows = 1:2, cols = 2:10, gridExpand = TRUE)
+          setColWidths(wb, sheet = question, cols = 1, widths = "auto", ignoreMergedCells = TRUE)
+          setColWidths(wb, sheet = question, cols = 2:10, widths = 20, ignoreMergedCells = TRUE)
+          addStyle(wb, sheet = question, style = centeredrounded3, rows = 3:(nrow(qExcel) + 2), cols = 2:10, gridExpand = TRUE)
         } else {
           # Data missing, inform user and skip analysis
           output$Q8_interp <- renderUI({
             text <- "Data for question Q8 is missing."
             return(tags$p(text))
           })
+          globalVars$t8 <- NULL
         }
         
         #########
@@ -2133,9 +2151,9 @@ server <- (function(input, output, session){
           modified9qdata <- qdata          
           #Manually map these codes to "White", "Black", or "Other"
           modified9qdata$Race <- dplyr::recode(modified9qdata$Race,
-                                  `3` = "Black",  
-                                     `6` = "White", 
-                                    .default = "Other") 
+                                               `3` = "Black",  
+                                               `6` = "White", 
+                                               .default = "Other") 
           
           print(modified9qdata)
           
@@ -2144,7 +2162,7 @@ server <- (function(input, output, session){
             ylab("Proportion") +
             facet_wrap(~Race)+
             theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust=1), text = element_text(size = 15))
-
+          
           globalVars$p9 <- p
           
           
@@ -2168,6 +2186,7 @@ server <- (function(input, output, session){
             text <- "Data for question Q9 is missing."
             return(tags$p(text))
           })
+          globalVars$t09 <- NULL
         }
         
         #########
@@ -2234,6 +2253,7 @@ server <- (function(input, output, session){
             text <- "Data for question Q10 is missing."
             return(tags$p(text))
           })
+          globalVars$t10 <- NULL
         }
         
         #########
@@ -2254,7 +2274,7 @@ server <- (function(input, output, session){
             ungroup() %>%
             complete(Race, Gender, fill = list(incidents = 0)) %>%
             filter(Race != "Missing race data" & Gender != "Missing gender data")
-
+          
           p <- qdata %>%
             ggplot(aes(x = incidents, y = Race)) +
             geom_col(aes(fill=Gender), position = "dodge", width=0.8) +
@@ -2284,6 +2304,7 @@ server <- (function(input, output, session){
             text <- "Data for question Q11  is missing."
             return(tags$p(text))
           })
+          globalVars$t11 <- NULL
         }
         
         #########
@@ -2295,7 +2316,7 @@ server <- (function(input, output, session){
         question <- 12
         
         # Check if data is available for analysis
-        if (all(c("Race", "Gender", "Stopped") %in% colnames(policingdata))) {
+        if (all(c("Race", "Gender", "Stopped") %in% trimws(colnames(policingdata)))) {
           qdata <- policingdata %>%
             filter(Stopped == "Yes") %>%
             group_by(Race, Gender) %>%
@@ -2304,7 +2325,7 @@ server <- (function(input, output, session){
             complete(Race, Gender, fill = list(incidents = 0)) %>%
             filter(Race != "Missing race data" & Gender != "Missing gender data")
           
-
+          
           p <- qdata %>%
             ggplot(aes(x = incidents, y = Race)) +
             geom_col(aes(fill=Gender), position = "dodge", width=0.8) +
@@ -2335,6 +2356,7 @@ server <- (function(input, output, session){
             text <- "Data for question Q12 is missing."
             return(tags$p(text))
           })
+          globalVars$t12 <- NULL
         }
         
         #########
@@ -2385,6 +2407,7 @@ server <- (function(input, output, session){
             text <- "Data for question Q13 (Race, Gender and SearchConducted variable in policing data) is missing."
             return(tags$p(text))
           })
+          globalVars$t13 <- NULL
         }
         
         ########################
@@ -2470,26 +2493,32 @@ server <- (function(input, output, session){
     }
   )
   
-  output$Q1_tab <- DT::renderDataTable(
-    {
+  # Update renderDataTable to handle missing data
+  output$Q01_tab <- DT::renderDataTable({
+    # Check if data is available before processing
+    if (!is.null(globalVars$t1)) {
       globalVars$t1 %>% mutate(across(where(is.numeric), round, 6))
-    },
-    extensions = "Buttons",
-    rownames = FALSE,
-    options = list(
-      dom = "Bfrtip",
-      buttons =
-        list("copy", "print", list(
-          extend = "collection",
-          buttons = list(
-            list(extend = "csv", filename = "prop-test-summary"),
-            list(extend = "excel", filename = "prop-test-summary"),
-            list(extend = "pdf", filename = "prop-test-summary")
-          ),
-          text = "Download",
-          filename = "q01"
-        ))
-    )
+    } else {
+      # Show a message if data is missing
+      return(data.frame(message = "Data for question 01 is missing. No table available."))
+    }
+  },
+  extensions = "Buttons",
+  rownames = FALSE,
+  options = list(
+    dom = "Bfrtip",
+    buttons =
+      list("copy", "print", list(
+        extend = "collection",
+        buttons = list(
+          list(extend = "csv", filename = "prop-test-summary"),
+          list(extend = "excel", filename = "prop-test-summary"),
+          list(extend = "pdf", filename = "prop-test-summary")
+        ),
+        text = "Download",
+        filename = "q01"
+      ))
+   )
   )
   
   output$Q1_interp <- renderUI({
@@ -2518,26 +2547,32 @@ server <- (function(input, output, session){
     }
   )
   
-  output$Q2_tab <- DT::renderDataTable(
-    {
+  # Update renderDataTable to handle missing data
+  output$Q02_tab <- DT::renderDataTable({
+    # Check if data is available before processing
+    if (!is.null(globalVars$t2)) {
       globalVars$t2 %>% mutate(across(where(is.numeric), round, 6))
-    },
-    extensions = "Buttons",
-    rownames = FALSE,
-    options = list(
-      dom = "Bfrtip",
-      buttons =
-        list("copy", "print", list(
-          extend = "collection",
-          buttons = list(
-            list(extend = "csv", filename = "prop-test-summary"),
-            list(extend = "excel", filename = "prop-test-summary"),
-            list(extend = "pdf", filename = "prop-test-summary")
-          ),
-          text = "Download",
-          filename = "q02"
-        ))
-    )
+    } else {
+      # Show a message if data is missing
+      return(data.frame(message = "Data for question 02 is missing. No table available."))
+    }
+  },
+  extensions = "Buttons",
+  rownames = FALSE,
+  options = list(
+    dom = "Bfrtip",
+    buttons =
+      list("copy", "print", list(
+        extend = "collection",
+        buttons = list(
+          list(extend = "csv", filename = "prop-test-summary"),
+          list(extend = "excel", filename = "prop-test-summary"),
+          list(extend = "pdf", filename = "prop-test-summary")
+        ),
+        text = "Download",
+        filename = "q02"
+      ))
+   )
   )
   
   output$Q2_interp <- renderUI({
@@ -2566,26 +2601,32 @@ server <- (function(input, output, session){
     }
   )
   
-  output$Q3_tab <- DT::renderDataTable(
-    {
+  # Update renderDataTable to handle missing data
+  output$Q03_tab <- DT::renderDataTable({
+    # Check if data is available before processing
+    if (!is.null(globalVars$t3)) {
       globalVars$t3 %>% mutate(across(where(is.numeric), round, 6))
-    },
-    extensions = "Buttons",
-    rownames = FALSE,
-    options = list(
-      dom = "Bfrtip",
-      buttons =
-        list("copy", "print", list(
-          extend = "collection",
-          buttons = list(
-            list(extend = "csv", filename = "prop-test-summary"),
-            list(extend = "excel", filename = "prop-test-summary"),
-            list(extend = "pdf", filename = "prop-test-summary")
-          ),
-          text = "Download",
-          filename = "q03"
-        ))
-    )
+    } else {
+      # Show a message if data is missing
+      return(data.frame(message = "Data for question 03 is missing. No table available."))
+    }
+  },
+  extensions = "Buttons",
+  rownames = FALSE,
+  options = list(
+    dom = "Bfrtip",
+    buttons =
+      list("copy", "print", list(
+        extend = "collection",
+        buttons = list(
+          list(extend = "csv", filename = "prop-test-summary"),
+          list(extend = "excel", filename = "prop-test-summary"),
+          list(extend = "pdf", filename = "prop-test-summary")
+        ),
+        text = "Download",
+        filename = "q03"
+      ))
+   )
   )
   
   output$Q3_interp <- renderUI({
@@ -2614,26 +2655,32 @@ server <- (function(input, output, session){
     }
   )
   
-  output$Q4_tab <- DT::renderDataTable(
-    {
+  # Update renderDataTable to handle missing data
+  output$Q04_tab <- DT::renderDataTable({
+    # Check if data is available before processing
+    if (!is.null(globalVars$t4)) {
       globalVars$t4 %>% mutate(across(where(is.numeric), round, 6))
-    },
-    extensions = "Buttons",
-    rownames = FALSE,
-    options = list(
-      dom = "Bfrtip",
-      buttons =
-        list("copy", "print", list(
-          extend = "collection",
-          buttons = list(
-            list(extend = "csv", filename = "prop-test-summary"),
-            list(extend = "excel", filename = "prop-test-summary"),
-            list(extend = "pdf", filename = "prop-test-summary")
-          ),
-          text = "Download",
-          filename = "q04"
-        ))
-    )
+    } else {
+      # Show a message if data is missing
+      return(data.frame(message = "Data for question 04 is missing. No table available."))
+    }
+  },
+  extensions = "Buttons",
+  rownames = FALSE,
+  options = list(
+    dom = "Bfrtip",
+    buttons =
+      list("copy", "print", list(
+        extend = "collection",
+        buttons = list(
+          list(extend = "csv", filename = "prop-test-summary"),
+          list(extend = "excel", filename = "prop-test-summary"),
+          list(extend = "pdf", filename = "prop-test-summary")
+        ),
+        text = "Download",
+        filename = "q04"
+      ))
+   )
   )
   
   output$Q4_interp <- renderUI({
@@ -2662,26 +2709,32 @@ server <- (function(input, output, session){
     }
   )
   
-  output$Q5_tab <- DT::renderDataTable(
-    {
+  # Update renderDataTable to handle missing data
+  output$Q05_tab <- DT::renderDataTable({
+    # Check if data is available before processing
+    if (!is.null(globalVars$t5)) {
       globalVars$t5 %>% mutate(across(where(is.numeric), round, 6))
-    },
-    extensions = "Buttons",
-    rownames = FALSE,
-    options = list(
-      dom = "Bfrtip",
-      buttons =
-        list("copy", "print", list(
-          extend = "collection",
-          buttons = list(
-            list(extend = "csv", filename = "prop-test-summary"),
-            list(extend = "excel", filename = "prop-test-summary"),
-            list(extend = "pdf", filename = "prop-test-summary")
-          ),
-          text = "Download",
-          filename = "q05"
-        ))
-    )
+    } else {
+      # Show a message if data is missing
+      return(data.frame(message = "Data for question 05 is missing. No table available."))
+    }
+  },
+  extensions = "Buttons",
+  rownames = FALSE,
+  options = list(
+    dom = "Bfrtip",
+    buttons =
+      list("copy", "print", list(
+        extend = "collection",
+        buttons = list(
+          list(extend = "csv", filename = "prop-test-summary"),
+          list(extend = "excel", filename = "prop-test-summary"),
+          list(extend = "pdf", filename = "prop-test-summary")
+        ),
+        text = "Download",
+        filename = "q05"
+      ))
+   )
   )
   
   output$Q5_interp <- renderUI({
@@ -2710,25 +2763,31 @@ server <- (function(input, output, session){
     }
   )
   
-  output$Q6_tab <- DT::renderDataTable(
-    {
+  # Update renderDataTable to handle missing data
+  output$Q06_tab <- DT::renderDataTable({
+    # Check if data is available before processing
+    if (!is.null(globalVars$t6)) {
       globalVars$t6 %>% mutate(across(where(is.numeric), round, 6))
-    },
-    extensions = "Buttons",
-    rownames = FALSE,
-    options = list(
-      dom = "Bfrtip",
-      buttons =
-        list("copy", "print", list(
-          extend = "collection",
-          buttons = list(
-            list(extend = "csv", filename = "prop-test-summary"),
-            list(extend = "excel", filename = "prop-test-summary"),
-            list(extend = "pdf", filename = "prop-test-summary")
-          ),
-          text = "Download",
-          filename = "q06"
-        ))
+    } else {
+      # Show a message if data is missing
+      return(data.frame(message = "Data for question 06 is missing. No table available."))
+    }
+  },
+  extensions = "Buttons",
+  rownames = FALSE,
+  options = list(
+    dom = "Bfrtip",
+    buttons =
+      list("copy", "print", list(
+        extend = "collection",
+        buttons = list(
+          list(extend = "csv", filename = "prop-test-summary"),
+          list(extend = "excel", filename = "prop-test-summary"),
+          list(extend = "pdf", filename = "prop-test-summary")
+        ),
+        text = "Download",
+        filename = "q06"
+      ))
     )
   )
   
@@ -2752,26 +2811,32 @@ server <- (function(input, output, session){
     }
   )
   
-  output$Q7_tab <- DT::renderDataTable(
-    {
+  # Update renderDataTable to handle missing data
+  output$Q07_tab <- DT::renderDataTable({
+    # Check if data is available before processing
+    if (!is.null(globalVars$t7)) {
       globalVars$t7 %>% mutate(across(where(is.numeric), round, 6))
-    },
-    extensions = "Buttons",
-    rownames = FALSE,
-    options = list(
-      dom = "Bfrtip",
-      buttons =
-        list("copy", "print", list(
-          extend = "collection",
-          buttons = list(
-            list(extend = "csv", filename = "prop-test-summary"),
-            list(extend = "excel", filename = "prop-test-summary"),
-            list(extend = "pdf", filename = "prop-test-summary")
-          ),
-          text = "Download",
-          filename = "q07"
-        ))
-    )
+    } else {
+      # Show a message if data is missing
+      return(data.frame(message = "Data for question 07 is missing. No table available."))
+    }
+  },
+  extensions = "Buttons",
+  rownames = FALSE,
+  options = list(
+    dom = "Bfrtip",
+    buttons =
+      list("copy", "print", list(
+        extend = "collection",
+        buttons = list(
+          list(extend = "csv", filename = "prop-test-summary"),
+          list(extend = "excel", filename = "prop-test-summary"),
+          list(extend = "pdf", filename = "prop-test-summary")
+        ),
+        text = "Download",
+        filename = "q07"
+      ))
+   )
   )
   
   ##############################################################################
@@ -2794,26 +2859,32 @@ server <- (function(input, output, session){
     }
   )
   
-  output$Q8_tab <- DT::renderDataTable(
-    {
+  # Update renderDataTable to handle missing data
+  output$Q08_tab <- DT::renderDataTable({
+    # Check if data is available before processing
+    if (!is.null(globalVars$t8)) {
       globalVars$t8 %>% mutate(across(where(is.numeric), round, 6))
-    },
-    extensions = "Buttons",
-    rownames = FALSE,
-    options = list(
-      dom = "Bfrtip",
-      buttons =
-        list("copy", "print", list(
-          extend = "collection",
-          buttons = list(
-            list(extend = "csv", filename = "prop-test-summary"),
-            list(extend = "excel", filename = "prop-test-summary"),
-            list(extend = "pdf", filename = "prop-test-summary")
-          ),
-          text = "Download",
-          filename = "q08"
-        ))
-    )
+    } else {
+      # Show a message if data is missing
+      return(data.frame(message = "Data for question 08 is missing. No table available."))
+    }
+  },
+  extensions = "Buttons",
+  rownames = FALSE,
+  options = list(
+    dom = "Bfrtip",
+    buttons =
+      list("copy", "print", list(
+        extend = "collection",
+        buttons = list(
+          list(extend = "csv", filename = "prop-test-summary"),
+          list(extend = "excel", filename = "prop-test-summary"),
+          list(extend = "pdf", filename = "prop-test-summary")
+        ),
+        text = "Download",
+        filename = "q08"
+      ))
+   )
   )
   
   ##############################################################################
@@ -2836,26 +2907,32 @@ server <- (function(input, output, session){
     }
   )
   
-  output$Q9_tab <- DT::renderDataTable(
-    {
+  # Update renderDataTable to handle missing data
+  output$Q09_tab <- DT::renderDataTable({
+    # Check if data is available before processing
+    if (!is.null(globalVars$t9)) {
       globalVars$t9 %>% mutate(across(where(is.numeric), round, 6))
-    },
-    extensions = "Buttons",
-    rownames = FALSE,
-    options = list(
-      dom = "Bfrtip",
-      buttons =
-        list("copy", "print", list(
-          extend = "collection",
-          buttons = list(
-            list(extend = "csv", filename = "prop-test-summary"),
-            list(extend = "excel", filename = "prop-test-summary"),
-            list(extend = "pdf", filename = "prop-test-summary")
-          ),
-          text = "Download",
-          filename = "q09"
-        ))
-    )
+    } else {
+      # Show a message if data is missing
+      return(data.frame(message = "Data for question 09 is missing. No table available."))
+    }
+  },
+  extensions = "Buttons",
+  rownames = FALSE,
+  options = list(
+    dom = "Bfrtip",
+    buttons =
+      list("copy", "print", list(
+        extend = "collection",
+        buttons = list(
+          list(extend = "csv", filename = "prop-test-summary"),
+          list(extend = "excel", filename = "prop-test-summary"),
+          list(extend = "pdf", filename = "prop-test-summary")
+        ),
+        text = "Download",
+        filename = "q09"
+      ))
+   )
   )
   
   ##############################################################################
@@ -2878,26 +2955,32 @@ server <- (function(input, output, session){
     }
   )
   
-  output$Q10_tab <- DT::renderDataTable(
-    {
+  # Update renderDataTable to handle missing data
+  output$Q10_tab <- DT::renderDataTable({
+    # Check if data is available before processing
+    if (!is.null(globalVars$t10)) {
       globalVars$t10 %>% mutate(across(where(is.numeric), round, 6))
-    },
-    extensions = "Buttons",
-    rownames = FALSE,
-    options = list(
-      dom = "Bfrtip",
-      buttons =
-        list("copy", "print", list(
-          extend = "collection",
-          buttons = list(
-            list(extend = "csv", filename = "prop-test-summary"),
-            list(extend = "excel", filename = "prop-test-summary"),
-            list(extend = "pdf", filename = "prop-test-summary")
-          ),
-          text = "Download",
-          filename = "q10"
-        ))
-    )
+    } else {
+      # Show a message if data is missing
+      return(data.frame(message = "Data for question 10 is missing. No table available."))
+    }
+  },
+  extensions = "Buttons",
+  rownames = FALSE,
+  options = list(
+    dom = "Bfrtip",
+    buttons =
+      list("copy", "print", list(
+        extend = "collection",
+        buttons = list(
+          list(extend = "csv", filename = "prop-test-summary"),
+          list(extend = "excel", filename = "prop-test-summary"),
+          list(extend = "pdf", filename = "prop-test-summary")
+        ),
+        text = "Download",
+        filename = "q10"
+      ))
+   )
   )
   
   ############################################################################## ADDED?
@@ -2920,26 +3003,32 @@ server <- (function(input, output, session){
     }
   )
   
-  output$Q11_tab <- DT::renderDataTable(
-    {
+  # Update renderDataTable to handle missing data
+  output$Q11_tab <- DT::renderDataTable({
+    # Check if data is available before processing
+    if (!is.null(globalVars$t11)) {
       globalVars$t11 %>% mutate(across(where(is.numeric), round, 6))
-    },
-    extensions = "Buttons",
-    rownames = FALSE,
-    options = list(
-      dom = "Bfrtip",
-      buttons =
-        list("copy", "print", list(
-          extend = "collection",
-          buttons = list(
-            list(extend = "csv", filename = "prop-test-summary"),
-            list(extend = "excel", filename = "prop-test-summary"),
-            list(extend = "pdf", filename = "prop-test-summary")
-          ),
-          text = "Download",
-          filename = "q11"
-        ))
-    )
+    } else {
+      # Show a message if data is missing
+      return(data.frame(message = "Data for question 11 is missing. No table available."))
+    }
+  },
+  extensions = "Buttons",
+  rownames = FALSE,
+  options = list(
+    dom = "Bfrtip",
+    buttons =
+      list("copy", "print", list(
+        extend = "collection",
+        buttons = list(
+          list(extend = "csv", filename = "prop-test-summary"),
+          list(extend = "excel", filename = "prop-test-summary"),
+          list(extend = "pdf", filename = "prop-test-summary")
+        ),
+        text = "Download",
+        filename = "q11"
+      ))
+   )
   )
   
   ############################################################################## ADDED?
@@ -2962,10 +3051,16 @@ server <- (function(input, output, session){
     }
   )
   
-  output$Q12_tab <- DT::renderDataTable(
-    {
+  # Update renderDataTable to handle missing data
+  output$Q12_tab <- DT::renderDataTable({
+    # Check if data is available before processing
+    if (!is.null(globalVars$t12)) {
       globalVars$t12 %>% mutate(across(where(is.numeric), round, 6))
-    },
+    } else {
+      # Show a message if data is missing
+      return(data.frame(message = "Data for question 12 is missing. No table available."))
+    }
+  },
     extensions = "Buttons",
     rownames = FALSE,
     options = list(
@@ -2983,6 +3078,9 @@ server <- (function(input, output, session){
         ))
     )
   )
+  
+  
+  
   
   ############################################################################## ADDED?
   ###       Q13         #########################################################
@@ -3004,25 +3102,31 @@ server <- (function(input, output, session){
     }
   )
   
-  output$Q13_tab <- DT::renderDataTable(
-    {
+  # Update renderDataTable to handle missing data
+  output$Q13_tab <- DT::renderDataTable({
+    # Check if data is available before processing
+    if (!is.null(globalVars$t13)) {
       globalVars$t13 %>% mutate(across(where(is.numeric), round, 6))
-    },
-    extensions = "Buttons",
-    rownames = FALSE,
-    options = list(
-      dom = "Bfrtip",
-      buttons =
-        list("copy", "print", list(
-          extend = "collection",
-          buttons = list(
-            list(extend = "csv", filename = "prop-test-summary"),
-            list(extend = "excel", filename = "prop-test-summary"),
-            list(extend = "pdf", filename = "prop-test-summary")
-          ),
-          text = "Download",
-          filename = "q13"
-        ))
-    )
+    } else {
+      # Show a message if data is missing
+      return(data.frame(message = "Data for question 13 is missing. No table available."))
+    }
+  },
+  extensions = "Buttons",
+  rownames = FALSE,
+  options = list(
+    dom = "Bfrtip",
+    buttons =
+      list("copy", "print", list(
+        extend = "collection",
+        buttons = list(
+          list(extend = "csv", filename = "prop-test-summary"),
+          list(extend = "excel", filename = "prop-test-summary"),
+          list(extend = "pdf", filename = "prop-test-summary")
+        ),
+        text = "Download",
+        filename = "q13"
+      ))
+   )
   )
 })
