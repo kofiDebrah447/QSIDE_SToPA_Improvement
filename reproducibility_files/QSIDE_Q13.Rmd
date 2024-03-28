@@ -29,6 +29,8 @@ head(policingdata)
 
 ### For this situation, we need to calculate mean bond amount using summarise in dplyr. 
 
+### Question: Are subjects of specific intersectional identities more likely to be searched if they are stopped in a street check?
+
 ```{r}
 qdata <- policingdata %>%
   filter(SearchConducted == "Yes") %>%
