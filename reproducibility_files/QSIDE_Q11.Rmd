@@ -29,6 +29,8 @@ head(policingdata)
 
 ### For this situation, we need to calculate the number of incidents where there is use of force in dplyr. 
 
+### Question: Are officers more likely to use force on subjects with specific intersectional identities?
+
 ```{r}
 qdata <- policingdata %>%
   filter(UseOfForce == "Yes") %>%
