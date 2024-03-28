@@ -29,6 +29,8 @@ head(policingdata)
 
 ### For this situation, we need to first separate the day and time variables using mutate in dplyr. The data is then sorted by day of the week, and each day is assigned a color. 
 
+### Question: What number of police incidents occur during each weekday/hour of day?
+
 ```{r}
 
 policingdata <- policingdata %>%
