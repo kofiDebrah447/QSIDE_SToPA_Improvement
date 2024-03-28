@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2024 kofiDebrah447 (Kofi Debrah), shilxxh (Shiloh Maliskey), cbenso1822 (Claire Benson)
+Copyright (c) 2024 kofiDebrah447 (Kofi Debrah), shilxxh (Shiloh Maliskey), cbenso1822 (Claire Benson), abnuth18 (Abhinav Nuthalapati), jvan20 (Jazel  Vandlandschoot)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
