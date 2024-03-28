@@ -7,7 +7,7 @@
 4. Abhinav Nuthalapati
 5. Jazel VanLandschoot
 
-Project Description: This is a group project, which is part of the Michigan State University CMSE 495 Capstone Class, that focuses on the improvement of the QSIDE SToPA (Small Town Policing Acountability) Application. 
+Project Description: This is a group project, which is part of the Michigan State University CMSE 495 Capstone Class, that focuses on the improvement of the QSIDE SToPA (Small Town Policing Acountability) Application. This application provides a platform for any person to upoload policing data from a town, and the application will run analysis on the data to show further insights that you might not be able to see in the raw data.
 
 Project Plan Video Link: https://www.youtube.com/watch?v=Cs6HQqn5nto
 
