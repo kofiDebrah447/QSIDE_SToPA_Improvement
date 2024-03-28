@@ -1,4 +1,4 @@
-# CMSE 495 Capstone: QSIDE SToPA Improvement
+#  MSU CMSE 495 Capstone: QSIDE SToPA Improvement
 
 ## Team Members
 1. Shiloh Maliskey
