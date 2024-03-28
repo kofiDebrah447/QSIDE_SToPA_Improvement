@@ -2494,32 +2494,26 @@ server <- (function(input, output, session){
     }
   )
   
-  # Update renderDataTable to handle missing data
-  output$Q01_tab <- DT::renderDataTable({
-    # Check if data is available before processing
-    if (!is.null(globalVars$t1)) {
+  output$Q1_tab <- DT::renderDataTable(
+    {
       globalVars$t1 %>% mutate(across(where(is.numeric), round, 6))
-    } else {
-      # Show a message if data is missing
-      return(data.frame(Message = "Data for question 01 is missing. No table available."))
-    }
-  },
-  extensions = "Buttons",
-  rownames = FALSE,
-  options = list(
-    dom = "Bfrtip",
-    buttons =
-      list("copy", "print", list(
-        extend = "collection",
-        buttons = list(
-          list(extend = "csv", filename = "prop-test-summary"),
-          list(extend = "excel", filename = "prop-test-summary"),
-          list(extend = "pdf", filename = "prop-test-summary")
-        ),
-        text = "Download",
-        filename = "q01"
-      ))
-   )
+    },
+    extensions = "Buttons",
+    rownames = FALSE,
+    options = list(
+      dom = "Bfrtip",
+      buttons =
+        list("copy", "print", list(
+          extend = "collection",
+          buttons = list(
+            list(extend = "csv", filename = "prop-test-summary"),
+            list(extend = "excel", filename = "prop-test-summary"),
+            list(extend = "pdf", filename = "prop-test-summary")
+          ),
+          text = "Download",
+          filename = "q01"
+        ))
+    )
   )
   
   output$Q1_interp <- renderUI({
@@ -2548,32 +2542,26 @@ server <- (function(input, output, session){
     }
   )
   
-  # Update renderDataTable to handle missing data
-  output$Q02_tab <- DT::renderDataTable({
-    # Check if data is available before processing
-    if (!is.null(globalVars$t2)) {
+  output$Q2_tab <- DT::renderDataTable(
+    {
       globalVars$t2 %>% mutate(across(where(is.numeric), round, 6))
-    } else {
-      # Show a message if data is missing
-      return(data.frame(Message = "Data for question 02 is missing. No table available."))
-    }
-  },
-  extensions = "Buttons",
-  rownames = FALSE,
-  options = list(
-    dom = "Bfrtip",
-    buttons =
-      list("copy", "print", list(
-        extend = "collection",
-        buttons = list(
-          list(extend = "csv", filename = "prop-test-summary"),
-          list(extend = "excel", filename = "prop-test-summary"),
-          list(extend = "pdf", filename = "prop-test-summary")
-        ),
-        text = "Download",
-        filename = "q02"
-      ))
-   )
+    },
+    extensions = "Buttons",
+    rownames = FALSE,
+    options = list(
+      dom = "Bfrtip",
+      buttons =
+        list("copy", "print", list(
+          extend = "collection",
+          buttons = list(
+            list(extend = "csv", filename = "prop-test-summary"),
+            list(extend = "excel", filename = "prop-test-summary"),
+            list(extend = "pdf", filename = "prop-test-summary")
+          ),
+          text = "Download",
+          filename = "q02"
+        ))
+    )
   )
   
   output$Q2_interp <- renderUI({
@@ -2602,32 +2590,26 @@ server <- (function(input, output, session){
     }
   )
   
-  # Update renderDataTable to handle missing data
-  output$Q03_tab <- DT::renderDataTable({
-    # Check if data is available before processing
-    if (!is.null(globalVars$t3)) {
+  output$Q3_tab <- DT::renderDataTable(
+    {
       globalVars$t3 %>% mutate(across(where(is.numeric), round, 6))
-    } else {
-      # Show a message if data is missing
-      return(data.frame(Message = "Data for question 03 is missing. No table available."))
-    }
-  },
-  extensions = "Buttons",
-  rownames = FALSE,
-  options = list(
-    dom = "Bfrtip",
-    buttons =
-      list("copy", "print", list(
-        extend = "collection",
-        buttons = list(
-          list(extend = "csv", filename = "prop-test-summary"),
-          list(extend = "excel", filename = "prop-test-summary"),
-          list(extend = "pdf", filename = "prop-test-summary")
-        ),
-        text = "Download",
-        filename = "q03"
-      ))
-   )
+    },
+    extensions = "Buttons",
+    rownames = FALSE,
+    options = list(
+      dom = "Bfrtip",
+      buttons =
+        list("copy", "print", list(
+          extend = "collection",
+          buttons = list(
+            list(extend = "csv", filename = "prop-test-summary"),
+            list(extend = "excel", filename = "prop-test-summary"),
+            list(extend = "pdf", filename = "prop-test-summary")
+          ),
+          text = "Download",
+          filename = "q03"
+        ))
+    )
   )
   
   output$Q3_interp <- renderUI({
@@ -2656,32 +2638,26 @@ server <- (function(input, output, session){
     }
   )
   
-  # Update renderDataTable to handle missing data
-  output$Q04_tab <- DT::renderDataTable({
-    # Check if data is available before processing
-    if (!is.null(globalVars$t4)) {
+  output$Q4_tab <- DT::renderDataTable(
+    {
       globalVars$t4 %>% mutate(across(where(is.numeric), round, 6))
-    } else {
-      # Show a message if data is missing
-      return(data.frame(Message = "Data for question 04 is missing. No table available."))
-    }
-  },
-  extensions = "Buttons",
-  rownames = FALSE,
-  options = list(
-    dom = "Bfrtip",
-    buttons =
-      list("copy", "print", list(
-        extend = "collection",
-        buttons = list(
-          list(extend = "csv", filename = "prop-test-summary"),
-          list(extend = "excel", filename = "prop-test-summary"),
-          list(extend = "pdf", filename = "prop-test-summary")
-        ),
-        text = "Download",
-        filename = "q04"
-      ))
-   )
+    },
+    extensions = "Buttons",
+    rownames = FALSE,
+    options = list(
+      dom = "Bfrtip",
+      buttons =
+        list("copy", "print", list(
+          extend = "collection",
+          buttons = list(
+            list(extend = "csv", filename = "prop-test-summary"),
+            list(extend = "excel", filename = "prop-test-summary"),
+            list(extend = "pdf", filename = "prop-test-summary")
+          ),
+          text = "Download",
+          filename = "q04"
+        ))
+    )
   )
   
   output$Q4_interp <- renderUI({
@@ -2710,32 +2686,26 @@ server <- (function(input, output, session){
     }
   )
   
-  # Update renderDataTable to handle missing data
-  output$Q05_tab <- DT::renderDataTable({
-    # Check if data is available before processing
-    if (!is.null(globalVars$t5)) {
+  output$Q5_tab <- DT::renderDataTable(
+    {
       globalVars$t5 %>% mutate(across(where(is.numeric), round, 6))
-    } else {
-      # Show a message if data is missing
-      return(data.frame(Message = "Data for question 05 is missing. No table available."))
-    }
-  },
-  extensions = "Buttons",
-  rownames = FALSE,
-  options = list(
-    dom = "Bfrtip",
-    buttons =
-      list("copy", "print", list(
-        extend = "collection",
-        buttons = list(
-          list(extend = "csv", filename = "prop-test-summary"),
-          list(extend = "excel", filename = "prop-test-summary"),
-          list(extend = "pdf", filename = "prop-test-summary")
-        ),
-        text = "Download",
-        filename = "q05"
-      ))
-   )
+    },
+    extensions = "Buttons",
+    rownames = FALSE,
+    options = list(
+      dom = "Bfrtip",
+      buttons =
+        list("copy", "print", list(
+          extend = "collection",
+          buttons = list(
+            list(extend = "csv", filename = "prop-test-summary"),
+            list(extend = "excel", filename = "prop-test-summary"),
+            list(extend = "pdf", filename = "prop-test-summary")
+          ),
+          text = "Download",
+          filename = "q05"
+        ))
+    )
   )
   
   output$Q5_interp <- renderUI({
@@ -2764,31 +2734,25 @@ server <- (function(input, output, session){
     }
   )
   
-  # Update renderDataTable to handle missing data
-  output$Q06_tab <- DT::renderDataTable({
-    # Check if data is available before processing
-    if (!is.null(globalVars$t6)) {
+  output$Q6_tab <- DT::renderDataTable(
+    {
       globalVars$t6 %>% mutate(across(where(is.numeric), round, 6))
-    } else {
-      # Show a message if data is missing
-      return(data.frame(Message = "Data for question 06 is missing. No table available."))
-    }
-  },
-  extensions = "Buttons",
-  rownames = FALSE,
-  options = list(
-    dom = "Bfrtip",
-    buttons =
-      list("copy", "print", list(
-        extend = "collection",
-        buttons = list(
-          list(extend = "csv", filename = "prop-test-summary"),
-          list(extend = "excel", filename = "prop-test-summary"),
-          list(extend = "pdf", filename = "prop-test-summary")
-        ),
-        text = "Download",
-        filename = "q06"
-      ))
+    },
+    extensions = "Buttons",
+    rownames = FALSE,
+    options = list(
+      dom = "Bfrtip",
+      buttons =
+        list("copy", "print", list(
+          extend = "collection",
+          buttons = list(
+            list(extend = "csv", filename = "prop-test-summary"),
+            list(extend = "excel", filename = "prop-test-summary"),
+            list(extend = "pdf", filename = "prop-test-summary")
+          ),
+          text = "Download",
+          filename = "q06"
+        ))
     )
   )
   
@@ -2812,32 +2776,26 @@ server <- (function(input, output, session){
     }
   )
   
-  # Update renderDataTable to handle missing data
-  output$Q07_tab <- DT::renderDataTable({
-    # Check if data is available before processing
-    if (!is.null(globalVars$t7)) {
+  output$Q7_tab <- DT::renderDataTable(
+    {
       globalVars$t7 %>% mutate(across(where(is.numeric), round, 6))
-    } else {
-      # Show a message if data is missing
-      return(data.frame(Message = "Data for question 07 is missing. No table available."))
-    }
-  },
-  extensions = "Buttons",
-  rownames = FALSE,
-  options = list(
-    dom = "Bfrtip",
-    buttons =
-      list("copy", "print", list(
-        extend = "collection",
-        buttons = list(
-          list(extend = "csv", filename = "prop-test-summary"),
-          list(extend = "excel", filename = "prop-test-summary"),
-          list(extend = "pdf", filename = "prop-test-summary")
-        ),
-        text = "Download",
-        filename = "q07"
-      ))
-   )
+    },
+    extensions = "Buttons",
+    rownames = FALSE,
+    options = list(
+      dom = "Bfrtip",
+      buttons =
+        list("copy", "print", list(
+          extend = "collection",
+          buttons = list(
+            list(extend = "csv", filename = "prop-test-summary"),
+            list(extend = "excel", filename = "prop-test-summary"),
+            list(extend = "pdf", filename = "prop-test-summary")
+          ),
+          text = "Download",
+          filename = "q07"
+        ))
+    )
   )
   
   ##############################################################################
@@ -2860,32 +2818,26 @@ server <- (function(input, output, session){
     }
   )
   
-  # Update renderDataTable to handle missing data
-  output$Q08_tab <- DT::renderDataTable({
-    # Check if data is available before processing
-    if (!is.null(globalVars$t8)) {
+  output$Q8_tab <- DT::renderDataTable(
+    {
       globalVars$t8 %>% mutate(across(where(is.numeric), round, 6))
-    } else {
-      # Show a message if data is missing
-      return(data.frame(Message = "Data for question 08 is missing. No table available."))
-    }
-  },
-  extensions = "Buttons",
-  rownames = FALSE,
-  options = list(
-    dom = "Bfrtip",
-    buttons =
-      list("copy", "print", list(
-        extend = "collection",
-        buttons = list(
-          list(extend = "csv", filename = "prop-test-summary"),
-          list(extend = "excel", filename = "prop-test-summary"),
-          list(extend = "pdf", filename = "prop-test-summary")
-        ),
-        text = "Download",
-        filename = "q08"
-      ))
-   )
+    },
+    extensions = "Buttons",
+    rownames = FALSE,
+    options = list(
+      dom = "Bfrtip",
+      buttons =
+        list("copy", "print", list(
+          extend = "collection",
+          buttons = list(
+            list(extend = "csv", filename = "prop-test-summary"),
+            list(extend = "excel", filename = "prop-test-summary"),
+            list(extend = "pdf", filename = "prop-test-summary")
+          ),
+          text = "Download",
+          filename = "q08"
+        ))
+    )
   )
   
   ##############################################################################
@@ -2908,32 +2860,26 @@ server <- (function(input, output, session){
     }
   )
   
-  # Update renderDataTable to handle missing data
-  output$Q09_tab <- DT::renderDataTable({
-    # Check if data is available before processing
-    if (!is.null(globalVars$t9)) {
+  output$Q9_tab <- DT::renderDataTable(
+    {
       globalVars$t9 %>% mutate(across(where(is.numeric), round, 6))
-    } else {
-      # Show a message if data is missing
-      return(data.frame(Message = "Data for question 09 is missing. No table available."))
-    }
-  },
-  extensions = "Buttons",
-  rownames = FALSE,
-  options = list(
-    dom = "Bfrtip",
-    buttons =
-      list("copy", "print", list(
-        extend = "collection",
-        buttons = list(
-          list(extend = "csv", filename = "prop-test-summary"),
-          list(extend = "excel", filename = "prop-test-summary"),
-          list(extend = "pdf", filename = "prop-test-summary")
-        ),
-        text = "Download",
-        filename = "q09"
-      ))
-   )
+    },
+    extensions = "Buttons",
+    rownames = FALSE,
+    options = list(
+      dom = "Bfrtip",
+      buttons =
+        list("copy", "print", list(
+          extend = "collection",
+          buttons = list(
+            list(extend = "csv", filename = "prop-test-summary"),
+            list(extend = "excel", filename = "prop-test-summary"),
+            list(extend = "pdf", filename = "prop-test-summary")
+          ),
+          text = "Download",
+          filename = "q09"
+        ))
+    )
   )
   
   ##############################################################################
@@ -2956,32 +2902,26 @@ server <- (function(input, output, session){
     }
   )
   
-  # Update renderDataTable to handle missing data
-  output$Q10_tab <- DT::renderDataTable({
-    # Check if data is available before processing
-    if (!is.null(globalVars$t10)) {
+  output$Q10_tab <- DT::renderDataTable(
+    {
       globalVars$t10 %>% mutate(across(where(is.numeric), round, 6))
-    } else {
-      # Show a message if data is missing
-      return(data.frame(Message = "Data for question 10 is missing. No table available."))
-    }
-  },
-  extensions = "Buttons",
-  rownames = FALSE,
-  options = list(
-    dom = "Bfrtip",
-    buttons =
-      list("copy", "print", list(
-        extend = "collection",
-        buttons = list(
-          list(extend = "csv", filename = "prop-test-summary"),
-          list(extend = "excel", filename = "prop-test-summary"),
-          list(extend = "pdf", filename = "prop-test-summary")
-        ),
-        text = "Download",
-        filename = "q10"
-      ))
-   )
+    },
+    extensions = "Buttons",
+    rownames = FALSE,
+    options = list(
+      dom = "Bfrtip",
+      buttons =
+        list("copy", "print", list(
+          extend = "collection",
+          buttons = list(
+            list(extend = "csv", filename = "prop-test-summary"),
+            list(extend = "excel", filename = "prop-test-summary"),
+            list(extend = "pdf", filename = "prop-test-summary")
+          ),
+          text = "Download",
+          filename = "q10"
+        ))
+    )
   )
   
   ############################################################################## ADDED?
