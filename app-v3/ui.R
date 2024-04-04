@@ -92,6 +92,29 @@ ui<-tagList(tags$head(tags$link(rel = "icon", type = "image/x-icon",
                                     "</div>"
                                   )
                                 ),
+                                br(),
+                                HTML(
+                                  paste0(
+                                    "<h2 align='center'>Core Questions</h2>",
+                                    "<div class='paragraph'><hr>",
+                                    "<ul>",
+                                    "<li> Q1- What proportion of all police incidents go to different gender/race groups? </li>",
+                                    "<li>Q2- What proportion of incidents related to routine traffic/moving violations go to different gender/race groups?</li>",
+                                    "<li>Q3- What proportion of incidents related to drug and/or firearm possession go to different gender/race groups?</li>",
+                                    "<li>Q4- What proportion of incidents related to quality-of-life violations go to different gender/race groups?</li>",
+                                    "<li>Q5- What proportion of incidents that resulted in an arrest go to different gender/race groups? </li>",
+                                    "<li>Q6- What proportion of incidents that occured resulted in an arrest for different gender/race groups?</li>",
+                                    "<li>Q7- How does average bond amount differ according to race and gender?</li>",
+                                    "<li>Q8- What proportion of police incidents go to different race groups within each patrolling beat/neighborhood?</li>",
+                                    "<li>Q9- What proportion of police incidents go to different race groups for each of the most active officers?</li>",
+                                    "<li>Q10- What number of police incidents occur during each weekday/hour of day?</li>",
+                                    "<li>Q11- Are officers more likely to use force on subjects from specific gender/race groups?</li>",
+                                    "<li>Q12- Are subjects from specific gender/race groups stopped in street checks at higher rates?</li>",
+                                    "<li>Q13- Are subjects from specific gender/race groups more likely to be searched if they are stopped in a street check?</li>",
+                                    "</ul>",
+                                    "</div>"
+                                  )
+                                ),
                                 br(), br(), br()
                        ),
                        #Dataset exploration panel
