@@ -610,7 +610,7 @@ ui<-tagList(tags$head(tags$link(rel = "icon", type = "image/x-icon",
                                               
                                               tabPanel("Q11", tags$hr(), value="Q11",
                                                        fluidPage(
-                                                         h1("Are officers more likely to use force on subjects with specific intersectional identities?"),
+                                                         h1("Are officers more likely to use force on subjects from specific gender/race groups?"),
                                                          fluidRow(shinycssloaders::withSpinner(plotOutput("Q11_plot"))),
                                                          fluidRow(
                                                            column(width=2, textInput("Q11_height", "Height", value=7)),
@@ -627,7 +627,7 @@ ui<-tagList(tags$head(tags$link(rel = "icon", type = "image/x-icon",
                                               
                                               tabPanel("Q12", tags$hr(), value="Q12",
                                                        fluidPage(
-                                                         h1("Are subjects of specific intersectional identities stopped in street checks at higher rates?"),
+                                                         h1("Are subjects from specific gender/race groups stopped in street checks at higher rates?"),
                                                          fluidRow(shinycssloaders::withSpinner(plotOutput("Q12_plot"))),
                                                          fluidRow(
                                                            column(width=2, textInput("Q12_height", "Height", value=7)),
@@ -644,7 +644,7 @@ ui<-tagList(tags$head(tags$link(rel = "icon", type = "image/x-icon",
                                               
                                               tabPanel("Q13", tags$hr(), value="Q13",
                                                        fluidPage(
-                                                         h1("Are subjects of specific intersectional identities more likely to be searched if they are stopped in a street check?"),
+                                                         h1("Are subjects from specific gender/race groups more likely to be searched if they are stopped in a street check?"),
                                                          fluidRow(shinycssloaders::withSpinner(plotOutput("Q13_plot"))),
                                                          fluidRow(
                                                            column(width=2, textInput("Q13_height", "Height", value=7)),
