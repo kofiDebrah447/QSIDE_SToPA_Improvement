@@ -13,6 +13,7 @@ The policing accountability app represents a significant step forward in the use
 ## app-v3 
 - Contains original parsing files adapted from original project https://github.com/WilliamCipolli/QsideProject.
 - To ensure reproducibility of the analysis improvements, the following data files have been added or modified: durhamdatanostopped.csv and durhamdata.csv
+- The durhamdataNOTCLEAN.csv is an original file from the QSIDE project that has not been altered. 
 
 
 ## Reproducibility Files:
