@@ -25,3 +25,8 @@ Reproducibility Instructions: https://github.com/kofiDebrah447/QSIDE_Spring24/tr
 Project Plan Video Link: https://www.youtube.com/watch?v=Cs6HQqn5nto
 
 Install Instructions: https://github.com/kofiDebrah447/QSIDE_Spring24/blob/main/INSTALL.md
+
+## Project Videos 
+1. https://youtu.be/Cs6HQqn5nto
+2. https://drive.google.com/file/d/1vnnfsX5ucq8TRoGGcVC7BEYEdy9-GZBJ/view?usp=sharing
+3. https://drive.google.com/file/d/1DLKklj60A2-MnHVGn6MEso1C_3dF5INS/view?usp=drive_link
