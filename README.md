@@ -1,8 +1,14 @@
 #  MSU CMSE 495 Capstone: QSIDE SToPA Improvement
 
 
-
 Project Description: This is a group project, which is part of the Michigan State University CMSE 495 Capstone Class, that focuses on the improvement of the QSIDE SToPA (Small Town Policing Accountability) Application. This application provides a platform for any person to upload policing data from a town, and the application will run analysis on the data to show further insights that you might not be able to see in the raw data.
+
+In small towns, maintaining transparent and accountable policing practices is both a challenge and a necessity. This allows law enforcement to foster trust and safety within communities. The QSIDE Small Town Policing Accountability (SToPA) project introduces an accountability app specifically designed to help investigate the disparities between law enforcement agencies and the communities in which they serve. Unlike existing solutions that may not cater to the nuanced needs of small towns, this app integrates features tailored to encourage engagement, transparency, and mutual understanding.
+
+The core functionality of the app includes a user-friendly data visualization tool that transparently displays policing patterns. Through a comprehensive approach using direct user input, the app provides a multifaceted view of policing activities, highlighting areas for improvement while also potentially recognizing positive interactions and trends. Our methodology combined software development best practices with data science techniques to analyze policing data. We analyze data that seeks to answer 13 core questions, found in Appendix F, each of which can be answered through data input that will produce statistical summaries and data visualizations. These were carefully selected and reviewed by the QSIDE organization to provide a comprehensive view of policing activities, highlighting areas for improvement, and recognizing positive interactions and trends.
+
+The policing accountability app represents a significant step forward in the use of technology to enhance community policing efforts, particularly in small towns. Future work will focus on expanding the app’s reach, improving its functionality based on user feedback, and continuously assessing its impact on policing practices and community relations.
+
 
 ## app-v3 
 - Contains original parsing files adapted from original project https://github.com/WilliamCipolli/QsideProject.
@@ -16,11 +22,12 @@ Reproducibility Instructions: https://github.com/kofiDebrah447/QSIDE_Spring24/tr
 
 
 ## Team Members
-1. Shiloh Maliskey
-2. Claire Benson
-3. Kofi Debrah
-4. Abhinav Nuthalapati
-5. Jazel VanLandschoot
+1. Claire Benson (benson76@msu.edu)
+2. Shiloh Maliskey (maliskey@msu.edu)
+3. Kofi Debrah (debrahko@msu.edu)
+4. Jazel VanLandschoot (heribac1@msu.edu)
+5. Abhinav Nuthalapati (nuthala2@msu.edu)
+
    
 Project Plan Video Link: https://www.youtube.com/watch?v=Cs6HQqn5nto
 
